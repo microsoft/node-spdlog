@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/Microsoft/node-spdlog/issues"
   },
-  "homepage": "https://github.com/Microsoft/node-spdlog#readme"
+  "homepage": "https://github.com/Microsoft/node-spdlog#readme",
+  "dependencies": {
+    "nan": "^2.8.0"
+  }
 }
