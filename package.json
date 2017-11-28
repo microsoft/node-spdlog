@@ -1,0 +1,28 @@
+{
+  "name": "spdlog",
+  "version": "0.1.0",
+  "description": "Node bindings for spdlog",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/node-spdlog.git"
+  },
+  "keywords": [
+    "node",
+    "spdlog",
+    "logging",
+    "logger",
+    "log",
+    "fast",
+    "performance"
+  ],
+  "author": "Microsoft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/node-spdlog/issues"
+  },
+  "homepage": "https://github.com/Microsoft/node-spdlog#readme"
+}
