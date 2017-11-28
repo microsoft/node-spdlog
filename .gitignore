@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+# node headers which get copied as part of node-gyp build, for C++ intellisense
+deps/node
