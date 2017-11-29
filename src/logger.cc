@@ -10,6 +10,8 @@ Nan::Persistent<v8::Function> Logger::constructor;
 
 NAN_MODULE_INIT(Logger::Init)
 {
+	spdlog::set_async_mode(8192);
+
 	v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
 	tpl->SetClassName(Nan::New("Logger").ToLocalChecked());
 	tpl->InstanceTemplate()->SetInternalFieldCount(1);
