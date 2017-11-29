@@ -149,7 +149,7 @@ suite('API', function () {
 		assert.ok(!actual.endsWith('[test] [critical] This message should not be written\n'));
 	});
 
-	test('set flush interval', function () {
+	test('set async mode', function () {
 		spdlog.setAsyncMode(8192, 2000);
 	});
 });
