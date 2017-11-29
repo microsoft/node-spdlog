@@ -9,12 +9,14 @@
 #include <nan.h>
 #include <spdlog/spdlog.h>
 
+NAN_METHOD(setAsyncMode);
+
 class Logger : public Nan::ObjectWrap
 {
-public:
+  public:
 	static NAN_MODULE_INIT(Init);
 
-private:
+  private:
 	explicit Logger(std::shared_ptr<spdlog::logger> logger);
 	~Logger();
 

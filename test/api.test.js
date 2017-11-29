@@ -148,4 +148,8 @@ suite('API', function () {
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(!actual.endsWith('[test] [critical] This message should not be written\n'));
 	});
+
+	test('set flush interval', function () {
+		spdlog.setAsyncMode(8192, 2000);
+	});
 });

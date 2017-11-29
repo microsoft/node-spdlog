@@ -6,11 +6,25 @@
 #include <nan.h>
 #include "logger.h"
 
+NAN_METHOD(setAsyncMode)
+{
+	if (!info[0]->IsNumber())
+	{
+		return Nan::ThrowError(Nan::Error("Provide queue size as first parameter"));
+	}
+	if (!info[1]->IsNumber())
+	{
+		return Nan::ThrowError(Nan::Error("Provide a flush interval in milliseconds as second parameter"));
+	}
+
+	spdlog::set_async_mode(info[0]->IntegerValue(), spdlog::async_overflow_policy::block_retry, nullptr, std::chrono::milliseconds(info[1]->IntegerValue()));
+}
+
 Nan::Persistent<v8::Function> Logger::constructor;
 
 NAN_MODULE_INIT(Logger::Init)
 {
-	spdlog::set_async_mode(8192);
+	spdlog::set_async_mode(8192, spdlog::async_overflow_policy::block_retry, nullptr, std::chrono::seconds(1));
 
 	v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
 	tpl->SetClassName(Nan::New("Logger").ToLocalChecked());
@@ -74,7 +88,6 @@ NAN_METHOD(Logger::New)
 		{
 			logger = spdlog::stdout_logger_mt(name);
 		}
-
 		Logger *obj = new Logger(logger);
 		obj->Wrap(info.This());
 		info.GetReturnValue().Set(info.This());

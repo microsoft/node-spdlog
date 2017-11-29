@@ -3,6 +3,7 @@ const mkdirp = require('mkdirp');
 const spdlog = require('bindings')('spdlog');
 
 exports.version = spdlog.version;
+exports.setAsyncMode = spdlog.setAsyncMode;
 exports.Logger = spdlog.Logger;
 
 class RotatingLogger extends spdlog.Logger {

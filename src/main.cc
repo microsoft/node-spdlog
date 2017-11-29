@@ -14,7 +14,8 @@ NAN_MODULE_INIT(Init)
   // console->error("Some error message with arg{}..", 1);
 
   Nan::Set(target, Nan::New("version").ToLocalChecked(), Nan::New(SPDLOG_VERSION).ToLocalChecked());
-  // Nan::Set(target, Nan::New("isActive").ToLocalChecked(), Nan::GetFunction(Nan::New<v8::FunctionTemplate>(isActive)).ToLocalChecked());
+  Nan::Set(target, Nan::New("setAsyncMode").ToLocalChecked(), Nan::GetFunction(Nan::New<v8::FunctionTemplate>(setAsyncMode)).ToLocalChecked());
+
   Logger::Init(target);
 }
 
