@@ -30,6 +30,8 @@
     "nan": "^2.8.0"
   },
   "devDependencies": {
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.53",
     "mocha": "^4.0.1"
   }
 }

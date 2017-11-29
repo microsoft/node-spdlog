@@ -8,10 +8,11 @@
 
 NAN_MODULE_INIT(Init)
 {
-  auto console = spdlog::stdout_color_mt("console");
-  console->info("Welcome to spdlog!");
-  console->error("Some error message with arg{}..", 1);
+  // auto console = spdlog::stdout_color_mt("console");
+  // console->info("Welcome to spdlog!");
+  // console->error("Some error message with arg{}..", 1);
 
+  Nan::Set(target, Nan::New("version").ToLocalChecked(), Nan::New(SPDLOG_VERSION).ToLocalChecked());
   // Nan::Set(target, Nan::New("isActive").ToLocalChecked(), Nan::GetFunction(Nan::New<v8::FunctionTemplate>(isActive)).ToLocalChecked());
   // Mutex::Init(target);
 }

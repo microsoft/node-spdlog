@@ -1,5 +1,7 @@
 {
 	"files.associations": {
-		"ios": "cpp"
+		"ios": "cpp",
+		"__functional_03": "cpp",
+		"functional": "cpp"
 	}
 }
