@@ -27,6 +27,7 @@
   "homepage": "https://github.com/Microsoft/node-spdlog#readme",
   "dependencies": {
     "bindings": "^1.3.0",
+    "mkdirp": "^0.5.1",
     "nan": "^2.8.0"
   },
   "devDependencies": {
