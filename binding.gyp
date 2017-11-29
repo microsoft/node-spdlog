@@ -17,10 +17,10 @@
 					'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
 				}
 			}]
-		],
-		"copies": [{
-			'destination': '<(module_root_dir)/deps',
-			'files': ['<(nodedir)/include/node']
-		}]
+		]
+		# "copies": [{
+		# 	'destination': '<(module_root_dir)/deps',
+		# 	'files': ['<(nodedir)/include/node']
+		# }]
 	}]
 }
