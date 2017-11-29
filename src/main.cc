@@ -5,6 +5,7 @@
 
 #include <nan.h>
 #include <spdlog/spdlog.h>
+#include "logger.h"
 
 NAN_MODULE_INIT(Init)
 {
@@ -14,7 +15,7 @@ NAN_MODULE_INIT(Init)
 
   Nan::Set(target, Nan::New("version").ToLocalChecked(), Nan::New(SPDLOG_VERSION).ToLocalChecked());
   // Nan::Set(target, Nan::New("isActive").ToLocalChecked(), Nan::GetFunction(Nan::New<v8::FunctionTemplate>(isActive)).ToLocalChecked());
-  // Mutex::Init(target);
+  Logger::Init(target);
 }
 
 NODE_MODULE(spdlog, Init)

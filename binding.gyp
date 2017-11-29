@@ -2,7 +2,8 @@
 	"targets": [{
 		"target_name": "spdlog",
 		"sources": [
-			"src/main.cc"
+			"src/main.cc",
+			"src/logger.cc"
 		],
 		"include_dirs": [
 			"<!(node -e \"require('nan')\")",

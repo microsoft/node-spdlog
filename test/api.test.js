@@ -18,4 +18,8 @@ suite('API', function () {
 
 		assert.equal(spdlog.version, version);
 	});
+
+	test('Logger is present', function () {
+		assert(typeof spdlog.Logger === 'function');
+	});
 });
