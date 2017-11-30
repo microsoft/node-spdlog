@@ -4,7 +4,7 @@
   "description": "Node bindings for spdlog",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "cp -R ~/.node-gyp/$(node -p 'process.versions.node')/include/node deps/node"
   },
   "repository": {
     "type": "git",
