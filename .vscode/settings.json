@@ -14,6 +14,9 @@
 		"algorithm": "cpp",
 		"cctype": "cpp",
 		"cstddef": "cpp",
-		"__mutex_base": "cpp"
+		"__mutex_base": "cpp",
+		"ratio": "cpp",
+		"chrono": "cpp",
+		"limits": "cpp"
 	}
 }
