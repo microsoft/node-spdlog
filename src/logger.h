@@ -10,6 +10,7 @@
 #include <spdlog/spdlog.h>
 
 NAN_METHOD(setAsyncMode);
+NAN_METHOD(setLevel);
 
 class Logger : public Nan::ObjectWrap
 {

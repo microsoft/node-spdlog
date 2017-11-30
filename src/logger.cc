@@ -20,6 +20,44 @@ NAN_METHOD(setAsyncMode)
 	spdlog::set_async_mode(info[0]->IntegerValue(), spdlog::async_overflow_policy::block_retry, nullptr, std::chrono::milliseconds(info[1]->IntegerValue()));
 }
 
+NAN_METHOD(setLevel)
+{
+	if (!info[0]->IsNumber())
+	{
+		return Nan::ThrowError(Nan::Error("Provide level"));
+	}
+
+	const int numberValue = info[0]->IntegerValue();
+	spdlog::level::level_enum level;
+	switch (numberValue)
+	{
+	case spdlog::level::critical:
+		level = spdlog::level::critical;
+		break;
+	case spdlog::level::err:
+		level = spdlog::level::err;
+		break;
+	case spdlog::level::warn:
+		level = spdlog::level::warn;
+		break;
+	case spdlog::level::info:
+		level = spdlog::level::info;
+		break;
+	case spdlog::level::debug:
+		level = spdlog::level::debug;
+		break;
+	case spdlog::level::trace:
+		level = spdlog::level::trace;
+		break;
+	case spdlog::level::off:
+		level = spdlog::level::off;
+		break;
+	default:
+		return Nan::ThrowError(Nan::Error("Invalid level"));
+	}
+	spdlog::set_level(level);
+}
+
 Nan::Persistent<v8::Function> Logger::constructor;
 
 NAN_MODULE_INIT(Logger::Init)

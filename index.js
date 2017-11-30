@@ -4,6 +4,7 @@ const spdlog = require('bindings')('spdlog');
 
 exports.version = spdlog.version;
 exports.setAsyncMode = spdlog.setAsyncMode;
+exports.setLevel = spdlog.setLevel;
 exports.Logger = spdlog.Logger;
 
 class RotatingLogger extends spdlog.Logger {
