@@ -139,6 +139,7 @@ NAN_METHOD(Logger::New)
 				{
 					logger = spdlog::rotating_logger_mt(logName, fileName, info[3]->IntegerValue(), info[4]->IntegerValue());
 				}
+				logger->info(logName);
 			}
 			else
 			{
