@@ -227,6 +227,14 @@ suite('API', function () {
 		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written\n'));
 	});
 
+	test('drop logger and create logger with same name and same file', function () {
+		let rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
+
+		rotatingLogger.drop();
+
+		rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
+	});
+
 	test('set async mode', function () {
 		spdlog.setAsyncMode(8192, 2000);
 	});
