@@ -347,7 +347,9 @@ NAN_METHOD(Logger::Drop)
 
 	if (obj->logger_)
 	{
-		spdlog::drop(obj->logger_->name());
+		const std::string name = obj->logger_->name();
+		obj->logger_ = NULL;
+		spdlog::drop(name);
 	}
 
 	info.GetReturnValue().Set(info.This());
