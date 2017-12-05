@@ -93,49 +93,60 @@ Logger::~Logger()
 
 NAN_METHOD(Logger::New)
 {
-	if (info.IsConstructCall())
+	try
 	{
-		if (!info[0]->IsString())
+		if (info.IsConstructCall())
 		{
-			return Nan::ThrowError(Nan::Error("Provide a logger name"));
-		}
-
-		const std::string name = *Nan::Utf8String(info[0]);
-		std::shared_ptr<spdlog::logger> logger;
-
-		if (name == "rotating")
-		{
-			if (!info[1]->IsString() || !info[2]->IsString())
+			if (!info[0]->IsString())
 			{
-				return Nan::ThrowError(Nan::Error("Provide the log name and file name"));
+				return Nan::ThrowError(Nan::Error("Provide a logger name"));
 			}
-			if (!info[3]->IsNumber() || !info[4]->IsNumber())
-			{
-				return Nan::ThrowError(Nan::Error("Provide the max size and max files"));
-			}
-			const std::string logName = *Nan::Utf8String(info[1]);
-			const std::string fileName = *Nan::Utf8String(info[2]);
 
-			logger = spdlog::get(logName);
-			if (!logger)
+			const std::string name = *Nan::Utf8String(info[0]);
+			std::shared_ptr<spdlog::logger> logger;
+
+			if (name == "rotating")
 			{
-				logger = spdlog::rotating_logger_mt(logName, fileName, info[3]->IntegerValue(), info[4]->IntegerValue());
+				if (!info[1]->IsString() || !info[2]->IsString())
+				{
+					return Nan::ThrowError(Nan::Error("Provide the log name and file name"));
+				}
+				if (!info[3]->IsNumber() || !info[4]->IsNumber())
+				{
+					return Nan::ThrowError(Nan::Error("Provide the max size and max files"));
+				}
+				const std::string logName = *Nan::Utf8String(info[1]);
+				const std::string fileName = *Nan::Utf8String(info[2]);
+
+				logger = spdlog::get(logName);
+				if (!logger)
+				{
+					logger = spdlog::rotating_logger_mt(logName, fileName, info[3]->IntegerValue(), info[4]->IntegerValue());
+				}
 			}
+			else
+			{
+				logger = spdlog::stdout_logger_mt(name);
+			}
+			Logger *obj = new Logger(logger);
+			obj->Wrap(info.This());
+			info.GetReturnValue().Set(info.This());
 		}
 		else
 		{
-			logger = spdlog::stdout_logger_mt(name);
+			const int argc = 1;
+			v8::Local<v8::Value> argv[argc] = {info[0]};
+			v8::Local<v8::Function> cons = Nan::New(constructor);
+			info.GetReturnValue().Set(Nan::NewInstance(cons, argc, argv).ToLocalChecked());
 		}
-		Logger *obj = new Logger(logger);
-		obj->Wrap(info.This());
-		info.GetReturnValue().Set(info.This());
 	}
-	else
+	catch (const std::exception &ex)
 	{
-		const int argc = 1;
-		v8::Local<v8::Value> argv[argc] = {info[0]};
-		v8::Local<v8::Function> cons = Nan::New(constructor);
-		info.GetReturnValue().Set(Nan::NewInstance(cons, argc, argv).ToLocalChecked());
+		return Nan::ThrowError(Nan::Error(ex.what()));
+	}
+	catch (...)
+	{
+		return Nan::ThrowError(Nan::Error("Unknown error creating log file"));
 	}
 }
 
