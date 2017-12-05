@@ -15,6 +15,7 @@ suite('API', function () {
 	var tempDirectory;
 	var logFile;
 	var EOL = '\n';
+	var testObject;
 
 	suiteSetup(() => {
 		tempDirectory = path.join(__dirname, 'logs');
@@ -36,13 +37,21 @@ suite('API', function () {
 				EOL = '\r\n'
 			}
 		}
-	})
+	});
+
+	setup(() => {
+		testObject = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
+	});
+
+	teardown(() => {
+		testObject.drop();
+	});
 
 	suiteTeardown(() => {
 		if (fs.existsSync(logFile)) {
 			fs.unlinkSync(logFile);
 		}
-	})
+	});
 
 	test('is loaded', function () {
 		const spdloghPath = path.join(__dirname, '..', 'deps', 'spdlog', 'include', 'spdlog', 'spdlog.h');
@@ -57,68 +66,60 @@ suite('API', function () {
 	});
 
 	test('Create rotating logger', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
-
 		assert.ok(fs.existsSync(logFile));
 	});
 
 	test('Log critical message', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.critical('Hello World');
-		rotatingLogger.flush();
+		testObject.critical('Hello World');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(actual.endsWith('[test] [critical] Hello World' + EOL));
 	});
 
 	test('Log error', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.error('Hello World');
-		rotatingLogger.flush();
+		testObject.error('Hello World');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(actual.endsWith('[test] [error] Hello World' + EOL));
 	});
 
 	test('Log warning', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.warn('Hello World');
-		rotatingLogger.flush();
+		testObject.warn('Hello World');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(actual.endsWith('[test] [warning] Hello World' + EOL));
 	});
 
 	test('Log info', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.info('Hello World');
-		rotatingLogger.flush();
+		testObject.info('Hello World');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(actual.endsWith('[test] [info] Hello World' + EOL));
 	});
 
 	test('Log debug', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.setLevel(1);
-		rotatingLogger.debug('Hello World');
-		rotatingLogger.flush();
+		testObject.setLevel(1);
+		testObject.debug('Hello World');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(actual.endsWith('[test] [debug] Hello World' + EOL));
 	});
 
 	test('Log trace', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.setLevel(0);
-		rotatingLogger.trace('Hello World');
-		rotatingLogger.flush();
+		testObject.setLevel(0);
+		testObject.trace('Hello World');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(actual.endsWith('[test] [trace] Hello World' + EOL));
@@ -126,75 +127,70 @@ suite('API', function () {
 
 
 	test('set level', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.setLevel(0);
-		assert.equal(rotatingLogger.getLevel(), 0);
+		testObject.setLevel(0);
+		assert.equal(testObject.getLevel(), 0);
 
-		rotatingLogger.setLevel(1);
-		assert.equal(rotatingLogger.getLevel(), 1);
+		testObject.setLevel(1);
+		assert.equal(testObject.getLevel(), 1);
 
-		rotatingLogger.setLevel(2);
-		assert.equal(rotatingLogger.getLevel(), 2);
+		testObject.setLevel(2);
+		assert.equal(testObject.getLevel(), 2);
 
-		rotatingLogger.setLevel(3);
-		assert.equal(rotatingLogger.getLevel(), 3);
+		testObject.setLevel(3);
+		assert.equal(testObject.getLevel(), 3);
 
-		rotatingLogger.setLevel(4);
-		assert.equal(rotatingLogger.getLevel(), 4);
+		testObject.setLevel(4);
+		assert.equal(testObject.getLevel(), 4);
 
-		rotatingLogger.setLevel(5);
-		assert.equal(rotatingLogger.getLevel(), 5);
+		testObject.setLevel(5);
+		assert.equal(testObject.getLevel(), 5);
 
-		rotatingLogger.setLevel(6);
-		assert.equal(rotatingLogger.getLevel(), 6);
+		testObject.setLevel(6);
+		assert.equal(testObject.getLevel(), 6);
 	});
 
 	test('Off Log', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.setLevel(6);
-		rotatingLogger.critical('This message should not be written');
-		rotatingLogger.flush();
+		testObject.setLevel(6);
+		testObject.critical('This message should not be written');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(!actual.endsWith('[test] [critical] This message should not be written' + EOL));
 	});
 
 	test('set log level to trace', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.setLevel(0);
-		rotatingLogger.trace('This trace message should be written');
-		rotatingLogger.flush();
+		testObject.setLevel(0);
+		testObject.trace('This trace message should be written');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(actual.endsWith('[test] [trace] This trace message should be written' + EOL));
 	});
 
 	test('set log level to debug', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.setLevel(1);
-		rotatingLogger.trace('This trace message should not be written');
-		rotatingLogger.flush();
+		testObject.setLevel(1);
+		testObject.trace('This trace message should not be written');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
 	});
 
 	test('set log level to info', function () {
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.setLevel(2);
-		rotatingLogger.trace('This trace message should not be written');
-		rotatingLogger.flush();
+		testObject.setLevel(2);
+		testObject.trace('This trace message should not be written');
+		testObject.flush();
 
 		let actual = fs.readFileSync(logFile).toString();
 		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
 
-		rotatingLogger.debug('This debug message should not be written');
-		rotatingLogger.flush();
+		testObject.debug('This debug message should not be written');
+		testObject.flush();
 
 		actual = fs.readFileSync(logFile).toString();
 		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written' + EOL));
@@ -202,10 +198,9 @@ suite('API', function () {
 
 	test('set global log level to trace', function () {
 		spdlog.setLevel(0);
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.trace('This trace message should be written');
-		rotatingLogger.flush();
+		testObject.trace('This trace message should be written');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(actual.endsWith('[test] [trace] This trace message should be written' + EOL));
@@ -213,10 +208,9 @@ suite('API', function () {
 
 	test('set global log level to debug', function () {
 		spdlog.setLevel(1);
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.trace('This trace message should not be written');
-		rotatingLogger.flush();
+		testObject.trace('This trace message should not be written');
+		testObject.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
 		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
@@ -224,27 +218,24 @@ suite('API', function () {
 
 	test('set global log level to info', function () {
 		spdlog.setLevel(2);
-		const rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 
-		rotatingLogger.trace('This trace message should not be written');
-		rotatingLogger.flush();
+		testObject.trace('This trace message should not be written');
+		testObject.flush();
 
 		let actual = fs.readFileSync(logFile).toString();
 		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
 
-		rotatingLogger.debug('This debug message should not be written');
-		rotatingLogger.flush();
+		testObject.debug('This debug message should not be written');
+		testObject.flush();
 
 		actual = fs.readFileSync(logFile).toString();
 		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written' + EOL));
 	});
 
 	test('drop logger and create logger with same name and same file', function () {
-		let rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
+		testObject.drop();
 
-		rotatingLogger.drop();
-
-		rotatingLogger = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
+		testObject = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
 	});
 
 	test('set async mode', function () {
