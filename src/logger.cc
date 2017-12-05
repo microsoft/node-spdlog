@@ -78,6 +78,7 @@ NAN_MODULE_INIT(Logger::Init)
 	Nan::SetPrototypeMethod(tpl, "getLevel", Logger::GetLevel);
 	Nan::SetPrototypeMethod(tpl, "setLevel", Logger::SetLevel);
 	Nan::SetPrototypeMethod(tpl, "flush", Logger::Flush);
+	Nan::SetPrototypeMethod(tpl, "drop", Logger::Drop);
 
 	constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
 	Nan::Set(target, Nan::New("Logger").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
@@ -89,6 +90,21 @@ Logger::Logger(std::shared_ptr<spdlog::logger> logger) : logger_(logger)
 
 Logger::~Logger()
 {
+	if (logger_ == NULL)
+	{
+		return;
+	}
+
+	try
+	{
+		spdlog::drop(logger_->name());
+	}
+	catch (...)
+	{
+		// noop
+	}
+
+	logger_ = NULL;
 }
 
 NAN_METHOD(Logger::New)
@@ -320,6 +336,18 @@ NAN_METHOD(Logger::Flush)
 	if (obj->logger_)
 	{
 		obj->logger_->flush();
+	}
+
+	info.GetReturnValue().Set(info.This());
+}
+
+NAN_METHOD(Logger::Drop)
+{
+	Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
+
+	if (obj->logger_)
+	{
+		spdlog::drop(obj->logger_->name());
 	}
 
 	info.GetReturnValue().Set(info.This());
