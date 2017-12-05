@@ -14,6 +14,7 @@ suite('API', function () {
 
 	var tempDirectory;
 	var logFile;
+	var EOL = '\n';
 
 	suiteSetup(() => {
 		tempDirectory = path.join(__dirname, 'logs');
@@ -23,6 +24,17 @@ suite('API', function () {
 		logFile = path.join(tempDirectory, 'test.log');
 		if (fs.existsSync(logFile)) {
 			fs.unlinkSync(logFile);
+		}
+
+		if (typeof process === 'object') {
+			if (process.platform === 'win32') {
+				EOL = '\r\n';
+			}
+		} else if (typeof navigator === 'object') {
+			let userAgent = navigator.userAgent;
+			if (navigator.userAgent.indexOf('Windows') >= 0) {
+				EOL = '\r\n'
+			}
 		}
 	})
 
@@ -57,7 +69,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [critical] Hello World\n'));
+		assert.ok(actual.endsWith('[test] [critical] Hello World' + EOL));
 	});
 
 	test('Log error', function () {
@@ -67,7 +79,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [error] Hello World\n'));
+		assert.ok(actual.endsWith('[test] [error] Hello World' + EOL));
 	});
 
 	test('Log warning', function () {
@@ -77,7 +89,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [warning] Hello World\n'));
+		assert.ok(actual.endsWith('[test] [warning] Hello World' + EOL));
 	});
 
 	test('Log info', function () {
@@ -87,7 +99,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [info] Hello World\n'));
+		assert.ok(actual.endsWith('[test] [info] Hello World' + EOL));
 	});
 
 	test('Log debug', function () {
@@ -98,7 +110,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [debug] Hello World\n'));
+		assert.ok(actual.endsWith('[test] [debug] Hello World' + EOL));
 	});
 
 	test('Log trace', function () {
@@ -109,7 +121,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [trace] Hello World\n'));
+		assert.ok(actual.endsWith('[test] [trace] Hello World' + EOL));
 	});
 
 
@@ -146,7 +158,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [critical] This message should not be written\n'));
+		assert.ok(!actual.endsWith('[test] [critical] This message should not be written' + EOL));
 	});
 
 	test('set log level to trace', function () {
@@ -157,7 +169,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [trace] This trace message should be written\n'));
+		assert.ok(actual.endsWith('[test] [trace] This trace message should be written' + EOL));
 	});
 
 	test('set log level to debug', function () {
@@ -168,7 +180,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written\n'));
+		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
 	});
 
 	test('set log level to info', function () {
@@ -179,13 +191,13 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		let actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written\n'));
+		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
 
 		rotatingLogger.debug('This debug message should not be written');
 		rotatingLogger.flush();
 
 		actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written\n'));
+		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written' + EOL));
 	});
 
 	test('set global log level to trace', function () {
@@ -196,7 +208,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [trace] This trace message should be written\n'));
+		assert.ok(actual.endsWith('[test] [trace] This trace message should be written' + EOL));
 	});
 
 	test('set global log level to debug', function () {
@@ -207,7 +219,7 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written\n'));
+		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
 	});
 
 	test('set global log level to info', function () {
@@ -218,13 +230,13 @@ suite('API', function () {
 		rotatingLogger.flush();
 
 		let actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written\n'));
+		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
 
 		rotatingLogger.debug('This debug message should not be written');
 		rotatingLogger.flush();
 
 		actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written\n'));
+		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written' + EOL));
 	});
 
 	test('drop logger and create logger with same name and same file', function () {
