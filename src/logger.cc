@@ -347,6 +347,10 @@ NAN_METHOD(Logger::Drop)
 
 	if (obj->logger_)
 	{
+
+		obj->logger_->info(obj->logger_.use_count());
+		obj->logger_->flush();
+
 		const std::string name = obj->logger_->name();
 		obj->logger_ = NULL;
 		spdlog::drop(name);
