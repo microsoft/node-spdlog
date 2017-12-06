@@ -135,11 +135,11 @@ NAN_METHOD(Logger::New)
 				const std::string fileName = *Nan::Utf8String(info[2]);
 
 				logger = spdlog::get(logName);
+
 				if (!logger)
 				{
 					logger = spdlog::rotating_logger_mt(logName, fileName, info[3]->IntegerValue(), info[4]->IntegerValue());
 				}
-				logger->info(logName);
 			}
 			else
 			{
@@ -348,10 +348,6 @@ NAN_METHOD(Logger::Drop)
 
 	if (obj->logger_)
 	{
-
-		obj->logger_->info(obj->logger_.use_count());
-		obj->logger_->flush();
-
 		const std::string name = obj->logger_->name();
 		obj->logger_ = NULL;
 		spdlog::drop(name);
