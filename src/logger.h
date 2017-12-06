@@ -7,6 +7,10 @@
 #define CONSOLE_H
 
 #include <nan.h>
+
+// Prevent child processes from inheriting the file handles
+#define SPDLOG_PREVENT_CHILD_FD
+
 #include <spdlog/spdlog.h>
 
 NAN_METHOD(setAsyncMode);
