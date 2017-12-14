@@ -79,6 +79,7 @@ NAN_MODULE_INIT(Logger::Init)
 	Nan::SetPrototypeMethod(tpl, "setLevel", Logger::SetLevel);
 	Nan::SetPrototypeMethod(tpl, "flush", Logger::Flush);
 	Nan::SetPrototypeMethod(tpl, "drop", Logger::Drop);
+	Nan::SetPrototypeMethod(tpl, "setPattern", Logger::SetPattern);
 
 	constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
 	Nan::Set(target, Nan::New("Logger").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
@@ -351,6 +352,23 @@ NAN_METHOD(Logger::Drop)
 		const std::string name = obj->logger_->name();
 		obj->logger_ = NULL;
 		spdlog::drop(name);
+	}
+
+	info.GetReturnValue().Set(info.This());
+}
+
+NAN_METHOD(Logger::SetPattern)
+{
+	if (!info[0]->IsString())
+	{
+		return Nan::ThrowError(Nan::Error("Provide pattern"));
+	}
+	Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
+	const std::string pattern = *Nan::Utf8String(info[0]);
+
+	if (obj->logger_)
+	{
+		obj->logger_->set_pattern(pattern);
 	}
 
 	info.GetReturnValue().Set(info.This());

@@ -38,6 +38,7 @@ class Logger : public Nan::ObjectWrap
 	static NAN_METHOD(SetLevel);
 	static NAN_METHOD(Flush);
 	static NAN_METHOD(Drop);
+	static NAN_METHOD(SetPattern);
 
 	static Nan::Persistent<v8::Function> constructor;
 

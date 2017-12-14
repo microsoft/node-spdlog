@@ -72,10 +72,9 @@ suite('API', function () {
 	test('Log critical message', function () {
 
 		testObject.critical('Hello World');
-		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [critical] Hello World' + EOL));
+		const actual = getLastLine();
+		assert.ok(actual.endsWith('[test] [critical] Hello World'));
 	});
 
 	test('Log error', function () {
@@ -83,46 +82,42 @@ suite('API', function () {
 		testObject.error('Hello World');
 		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [error] Hello World' + EOL));
+		const actual = getLastLine();
+		assert.ok(actual.endsWith('[test] [error] Hello World'));
 	});
 
 	test('Log warning', function () {
 
 		testObject.warn('Hello World');
-		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [warning] Hello World' + EOL));
+		const actual = getLastLine();
+		assert.ok(actual.endsWith('[test] [warning] Hello World'));
 	});
 
 	test('Log info', function () {
 
 		testObject.info('Hello World');
-		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [info] Hello World' + EOL));
+		const actual = getLastLine();
+		assert.ok(actual.endsWith('[test] [info] Hello World'));
 	});
 
 	test('Log debug', function () {
 
 		testObject.setLevel(1);
 		testObject.debug('Hello World');
-		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [debug] Hello World' + EOL));
+		const actual = getLastLine();
+		assert.ok(actual.endsWith('[test] [debug] Hello World'));
 	});
 
 	test('Log trace', function () {
 
 		testObject.setLevel(0);
 		testObject.trace('Hello World');
-		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [trace] Hello World' + EOL));
+		const actual = getLastLine();
+		assert.ok(actual.endsWith('[test] [trace] Hello World'));
 	});
 
 
@@ -156,28 +151,26 @@ suite('API', function () {
 		testObject.critical('This message should not be written');
 		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [critical] This message should not be written' + EOL));
+		const actual = getLastLine();
+		assert.ok(!actual.endsWith('[test] [critical] This message should not be written'));
 	});
 
 	test('set log level to trace', function () {
 
 		testObject.setLevel(0);
 		testObject.trace('This trace message should be written');
-		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [trace] This trace message should be written' + EOL));
+		let actual = getLastLine();
+		assert.ok(actual.endsWith('[test] [trace] This trace message should be written'));
 	});
 
 	test('set log level to debug', function () {
 
 		testObject.setLevel(1);
 		testObject.trace('This trace message should not be written');
-		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
+		let actual = getLastLine();
+		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written'));
 	});
 
 	test('set log level to info', function () {
@@ -186,50 +179,45 @@ suite('API', function () {
 		testObject.trace('This trace message should not be written');
 		testObject.flush();
 
-		let actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
+		let actual = getLastLine();
+		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written'));
 
 		testObject.debug('This debug message should not be written');
-		testObject.flush();
 
-		actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written' + EOL));
+		actual = getLastLine();
+		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written'));
 	});
 
 	test('set global log level to trace', function () {
 		spdlog.setLevel(0);
 
 		testObject.trace('This trace message should be written');
-		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(actual.endsWith('[test] [trace] This trace message should be written' + EOL));
+		const actual = getLastLine();
+		assert.ok(actual.endsWith('[test] [trace] This trace message should be written'));
 	});
 
 	test('set global log level to debug', function () {
 		spdlog.setLevel(1);
 
 		testObject.trace('This trace message should not be written');
-		testObject.flush();
 
-		const actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
+		let actual = getLastLine();
+		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written'));
 	});
 
 	test('set global log level to info', function () {
 		spdlog.setLevel(2);
 
 		testObject.trace('This trace message should not be written');
-		testObject.flush();
 
-		let actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written' + EOL));
+		let actual = getLastLine();
+		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written'));
 
 		testObject.debug('This debug message should not be written');
-		testObject.flush();
 
-		actual = fs.readFileSync(logFile).toString();
-		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written' + EOL));
+		actual = getLastLine();
+		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written'));
 	});
 
 	test('drop logger and create logger with same name and same file', function () {
@@ -241,4 +229,22 @@ suite('API', function () {
 	test('set async mode', function () {
 		spdlog.setAsyncMode(8192, 2000);
 	});
+
+	test('set pattern', function () {
+		testObject.setPattern('%v');
+
+		testObject.info('This message should be written as is');
+
+		const actual = getLastLine();
+		assert.equal(actual, 'This message should be written as is');
+	});
+
+	function getLastLine() {
+		testObject.drop();
+		const content = fs.readFileSync(logFile).toString();
+		testObject = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
+		const lines = content.split(EOL);
+		return lines[lines.length - 2];
+	}
+
 });
