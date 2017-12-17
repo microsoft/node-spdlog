@@ -80,6 +80,7 @@ NAN_MODULE_INIT(Logger::Init)
 	Nan::SetPrototypeMethod(tpl, "flush", Logger::Flush);
 	Nan::SetPrototypeMethod(tpl, "drop", Logger::Drop);
 	Nan::SetPrototypeMethod(tpl, "setPattern", Logger::SetPattern);
+	Nan::SetPrototypeMethod(tpl, "clearFormatters", Logger::ClearFormatters);
 
 	constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
 	Nan::Set(target, Nan::New("Logger").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
@@ -369,6 +370,19 @@ NAN_METHOD(Logger::SetPattern)
 	if (obj->logger_)
 	{
 		obj->logger_->set_pattern(pattern);
+	}
+
+	info.GetReturnValue().Set(info.This());
+}
+
+NAN_METHOD(Logger::ClearFormatters)
+{
+	Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
+	const std::string pattern = *Nan::Utf8String(info[0]);
+
+	if (obj->logger_)
+	{
+		obj->logger_->set_formatter(std::unique_ptr<VoidFormatter>(new VoidFormatter()));
 	}
 
 	info.GetReturnValue().Set(info.This());

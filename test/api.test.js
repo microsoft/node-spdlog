@@ -41,6 +41,7 @@ suite('API', function () {
 
 	setup(() => {
 		testObject = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
+		testObject.setPattern('%+');
 	});
 
 	teardown(() => {
@@ -239,12 +240,29 @@ suite('API', function () {
 		assert.equal(actual, 'This message should be written as is');
 	});
 
+	test('clear formatters', function () {
+		testObject.clearFormatters();
+
+		testObject.info('Cleared Formatters: ');
+		testObject.info('This message ');
+		testObject.info('should be ');
+		testObject.info('written ');
+		testObject.info('as is');
+
+		const actuals = getAllLines();
+		assert.equal(actuals[actuals.length - 1], 'Cleared Formatters: This message should be written as is');
+	});
+
 	function getLastLine() {
+		const lines = getAllLines();
+		return lines[lines.length - 2];
+	}
+
+	function getAllLines() {
 		testObject.drop();
 		const content = fs.readFileSync(logFile).toString();
 		testObject = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
-		const lines = content.split(EOL);
-		return lines[lines.length - 2];
+		return content.split(EOL);
 	}
 
 });
