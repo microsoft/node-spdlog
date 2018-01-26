@@ -4,7 +4,8 @@
   "description": "Node bindings for spdlog",
   "main": "index.js",
   "scripts": {
-    "dev": "cp -R ~/.node-gyp/$(node -p 'process.versions.node')/include/node deps/node"
+    "dev": "cp -R ~/.node-gyp/$(node -p 'process.versions.node')/include/node deps/node",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
