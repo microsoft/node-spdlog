@@ -55,7 +55,7 @@ suite('API', function () {
 	});
 
 	test('is loaded', function () {
-		const spdloghPath = path.join(__dirname, '..', 'deps', 'spdlog', 'include', 'spdlog', 'spdlog.h');
+		const spdloghPath = path.join(__dirname, '..', 'deps', 'spdlog', 'include', 'spdlog', 'common.h');
 		const contents = fs.readFileSync(spdloghPath, 'utf8');
 		const version = /SPDLOG_VERSION "([\d\.]+)"/.exec(contents)[1];
 
