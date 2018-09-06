@@ -140,7 +140,8 @@ NAN_METHOD(Logger::New)
 
 				if (!logger)
 				{
-					logger = spdlog::rotating_logger_mt(logName, fileName, info[3]->IntegerValue(), info[4]->IntegerValue());
+					std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+					logger = spdlog::rotating_logger_mt(logName, converter.from_bytes(fileName), info[3]->IntegerValue(), info[4]->IntegerValue());
 				}
 			}
 			else

@@ -10,6 +10,7 @@
 
 // Prevent child processes from inheriting the file handles
 #define SPDLOG_PREVENT_CHILD_FD
+#define SPDLOG_WCHAR_FILENAMES
 
 #include <spdlog/spdlog.h>
 
