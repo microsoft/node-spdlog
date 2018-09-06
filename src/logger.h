@@ -10,7 +10,11 @@
 
 // Prevent child processes from inheriting the file handles
 #define SPDLOG_PREVENT_CHILD_FD
-#define SPDLOG_WCHAR_FILENAMES
+
+#if defined(_WIN32)
+	// Use wide character file names in windows
+	#define SPDLOG_WCHAR_FILENAMES
+#endif
 
 #include <spdlog/spdlog.h>
 
