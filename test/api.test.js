@@ -17,12 +17,15 @@ suite('API', function () {
 	var EOL = '\n';
 	var testObject;
 
+	var filesToDelete = [];
+
 	suiteSetup(() => {
 		tempDirectory = path.join(__dirname, 'logs');
 		if (!fs.existsSync(tempDirectory)) {
 			fs.mkdirSync(tempDirectory);
 		}
 		logFile = path.join(tempDirectory, 'test.log');
+		filesToDelete.push(logFile);
 		if (fs.existsSync(logFile)) {
 			fs.unlinkSync(logFile);
 		}
@@ -39,19 +42,26 @@ suite('API', function () {
 		}
 	});
 
-	setup(() => {
-		testObject = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
-		testObject.setPattern('%+');
-	});
-
 	teardown(() => {
-		testObject.drop();
+		if (testObject) {
+			testObject.drop();
+		}
 	});
 
 	suiteTeardown(() => {
-		if (fs.existsSync(logFile)) {
-			fs.unlinkSync(logFile);
-		}
+		filesToDelete.forEach(file => {
+			if (fs.existsSync(file)) {
+				fs.unlinkSync(file);
+			}
+		});
+	});
+
+	test('is loaded', function () {
+		const spdloghPath = path.join(__dirname, '..', 'deps', 'spdlog', 'include', 'spdlog', 'common.h');
+		const contents = fs.readFileSync(spdloghPath, 'utf8');
+		const version = /SPDLOG_VERSION "([\d\.]+)"/.exec(contents)[1];
+
+		assert.equal(spdlog.version, version);
 	});
 
 	test('is loaded', function () {
@@ -67,11 +77,12 @@ suite('API', function () {
 	});
 
 	test('Create rotating logger', function () {
+		testObject = aTestObject(logFile);
 		assert.ok(fs.existsSync(logFile));
 	});
 
 	test('Log critical message', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.critical('Hello World');
 
 		const actual = getLastLine();
@@ -79,7 +90,7 @@ suite('API', function () {
 	});
 
 	test('Log error', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.error('Hello World');
 		testObject.flush();
 
@@ -88,7 +99,7 @@ suite('API', function () {
 	});
 
 	test('Log warning', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.warn('Hello World');
 
 		const actual = getLastLine();
@@ -96,7 +107,7 @@ suite('API', function () {
 	});
 
 	test('Log info', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.info('Hello World');
 
 		const actual = getLastLine();
@@ -104,7 +115,7 @@ suite('API', function () {
 	});
 
 	test('Log debug', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.setLevel(1);
 		testObject.debug('Hello World');
 
@@ -113,7 +124,7 @@ suite('API', function () {
 	});
 
 	test('Log trace', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.setLevel(0);
 		testObject.trace('Hello World');
 
@@ -123,7 +134,7 @@ suite('API', function () {
 
 
 	test('set level', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.setLevel(0);
 		assert.equal(testObject.getLevel(), 0);
 
@@ -147,7 +158,7 @@ suite('API', function () {
 	});
 
 	test('Off Log', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.setLevel(6);
 		testObject.critical('This message should not be written');
 		testObject.flush();
@@ -157,7 +168,7 @@ suite('API', function () {
 	});
 
 	test('set log level to trace', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.setLevel(0);
 		testObject.trace('This trace message should be written');
 
@@ -166,7 +177,7 @@ suite('API', function () {
 	});
 
 	test('set log level to debug', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.setLevel(1);
 		testObject.trace('This trace message should not be written');
 
@@ -175,7 +186,7 @@ suite('API', function () {
 	});
 
 	test('set log level to info', function () {
-
+		testObject = aTestObject(logFile);
 		testObject.setLevel(2);
 		testObject.trace('This trace message should not be written');
 		testObject.flush();
@@ -190,6 +201,7 @@ suite('API', function () {
 	});
 
 	test('set global log level to trace', function () {
+		testObject = aTestObject(logFile);
 		spdlog.setLevel(0);
 
 		testObject.trace('This trace message should be written');
@@ -199,6 +211,7 @@ suite('API', function () {
 	});
 
 	test('set global log level to debug', function () {
+		testObject = aTestObject(logFile);
 		spdlog.setLevel(1);
 
 		testObject.trace('This trace message should not be written');
@@ -208,6 +221,7 @@ suite('API', function () {
 	});
 
 	test('set global log level to info', function () {
+		testObject = aTestObject(logFile);
 		spdlog.setLevel(2);
 
 		testObject.trace('This trace message should not be written');
@@ -222,9 +236,7 @@ suite('API', function () {
 	});
 
 	test('drop logger and create logger with same name and same file', function () {
-		testObject.drop();
-
-		testObject = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
+		testObject = aTestObject(logFile);
 	});
 
 	test('set async mode', function () {
@@ -232,6 +244,8 @@ suite('API', function () {
 	});
 
 	test('set pattern', function () {
+		testObject = aTestObject(logFile);
+
 		testObject.setPattern('%v');
 
 		testObject.info('This message should be written as is');
@@ -241,6 +255,8 @@ suite('API', function () {
 	});
 
 	test('clear formatters', function () {
+		testObject = aTestObject(logFile);
+
 		testObject.clearFormatters();
 
 		testObject.info('Cleared Formatters: ');
@@ -253,15 +269,27 @@ suite('API', function () {
 		assert.equal(actuals[actuals.length - 1], 'Cleared Formatters: This message should be written as is');
 	});
 
+	test('create log file with special characters in file name', function () {
+		let file = path.join(__dirname, 'abcdø', 'test.log');
+		filesToDelete.push(file);
+		testObject = new spdlog.RotatingLogger('test', file, 1048576 * 5, 2);
+	});
+
 	function getLastLine() {
 		const lines = getAllLines();
 		return lines[lines.length - 2];
 	}
 
+	function aTestObject(logfile) {
+		const logger = new spdlog.RotatingLogger('test', logfile, 1048576 * 5, 2);
+		logger.setPattern('%+');
+		return logger;
+	}
+
 	function getAllLines() {
 		testObject.drop();
 		const content = fs.readFileSync(logFile).toString();
-		testObject = new spdlog.RotatingLogger('test', logFile, 1048576 * 5, 2);
+		testObject = aTestObject(logFile);
 		return content.split(EOL);
 	}
 

@@ -134,12 +134,18 @@ NAN_METHOD(Logger::New)
 					return Nan::ThrowError(Nan::Error("Provide the max size and max files"));
 				}
 				const std::string logName = *Nan::Utf8String(info[1]);
-				const std::string fileName = *Nan::Utf8String(info[2]);
 
 				logger = spdlog::get(logName);
 
 				if (!logger)
 				{
+					#if defined(_WIN32)
+						std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+						const std::wstring fileName = converter.from_bytes(*Nan::Utf8String(info[2]));
+					#else
+						const std::string fileName = *Nan::Utf8String(info[2]);
+					#endif
+
 					logger = spdlog::rotating_logger_mt(logName, fileName, info[3]->IntegerValue(), info[4]->IntegerValue());
 				}
 			}
