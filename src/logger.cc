@@ -141,9 +141,9 @@ NAN_METHOD(Logger::New)
 				{
 					#if defined(_WIN32)
 						std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-						const filename_t fileName = converter.from_bytes(*Nan::Utf8String(info[2]));
+						const std::wstring fileName = converter.from_bytes(*Nan::Utf8String(info[2]));
 					#else
-						const filename_t fileName = *Nan::Utf8String(info[2]);
+						const std::string fileName = *Nan::Utf8String(info[2]);
 					#endif
 
 					logger = spdlog::rotating_logger_mt(logName, fileName, info[3]->IntegerValue(), info[4]->IntegerValue());
