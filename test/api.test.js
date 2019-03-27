@@ -21,9 +21,6 @@ suite('API', function () {
 
 	suiteSetup(() => {
 		tempDirectory = path.join(__dirname, 'logs');
-		if (!fs.existsSync(tempDirectory)) {
-			fs.mkdirSync(tempDirectory);
-		}
 		logFile = path.join(tempDirectory, 'test.log');
 		filesToDelete.push(logFile);
 		if (fs.existsSync(logFile)) {
@@ -76,65 +73,65 @@ suite('API', function () {
 		assert(typeof spdlog.Logger === 'function');
 	});
 
-	test('Create rotating logger', function () {
-		testObject = aTestObject(logFile);
+	test('Create rotating logger', async function () {
+		testObject = await aTestObject(logFile);
 		assert.ok(fs.existsSync(logFile));
 	});
 
-	test('Log critical message', function () {
-		testObject = aTestObject(logFile);
+	test('Log critical message', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.critical('Hello World');
 
-		const actual = getLastLine();
+		const actual = await getLastLine();
 		assert.ok(actual.endsWith('[test] [critical] Hello World'));
 	});
 
-	test('Log error', function () {
-		testObject = aTestObject(logFile);
+	test('Log error', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.error('Hello World');
 		testObject.flush();
 
-		const actual = getLastLine();
+		const actual = await getLastLine();
 		assert.ok(actual.endsWith('[test] [error] Hello World'));
 	});
 
-	test('Log warning', function () {
-		testObject = aTestObject(logFile);
+	test('Log warning', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.warn('Hello World');
 
-		const actual = getLastLine();
+		const actual = await getLastLine();
 		assert.ok(actual.endsWith('[test] [warning] Hello World'));
 	});
 
-	test('Log info', function () {
-		testObject = aTestObject(logFile);
+	test('Log info', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.info('Hello World');
 
-		const actual = getLastLine();
+		const actual = await getLastLine();
 		assert.ok(actual.endsWith('[test] [info] Hello World'));
 	});
 
-	test('Log debug', function () {
-		testObject = aTestObject(logFile);
+	test('Log debug', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.setLevel(1);
 		testObject.debug('Hello World');
 
-		const actual = getLastLine();
+		const actual = await getLastLine();
 		assert.ok(actual.endsWith('[test] [debug] Hello World'));
 	});
 
-	test('Log trace', function () {
-		testObject = aTestObject(logFile);
+	test('Log trace', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.setLevel(0);
 		testObject.trace('Hello World');
 
-		const actual = getLastLine();
+		const actual = await getLastLine();
 		assert.ok(actual.endsWith('[test] [trace] Hello World'));
 	});
 
 
-	test('set level', function () {
-		testObject = aTestObject(logFile);
+	test('set level', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.setLevel(0);
 		assert.equal(testObject.getLevel(), 0);
 
@@ -157,105 +154,105 @@ suite('API', function () {
 		assert.equal(testObject.getLevel(), 6);
 	});
 
-	test('Off Log', function () {
-		testObject = aTestObject(logFile);
+	test('Off Log', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.setLevel(6);
 		testObject.critical('This message should not be written');
 		testObject.flush();
 
-		const actual = getLastLine();
+		const actual = await getLastLine();
 		assert.ok(!actual.endsWith('[test] [critical] This message should not be written'));
 	});
 
-	test('set log level to trace', function () {
-		testObject = aTestObject(logFile);
+	test('set log level to trace', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.setLevel(0);
 		testObject.trace('This trace message should be written');
 
-		let actual = getLastLine();
+		let actual = await getLastLine();
 		assert.ok(actual.endsWith('[test] [trace] This trace message should be written'));
 	});
 
-	test('set log level to debug', function () {
-		testObject = aTestObject(logFile);
+	test('set log level to debug', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.setLevel(1);
 		testObject.trace('This trace message should not be written');
 
-		let actual = getLastLine();
+		let actual = await getLastLine();
 		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written'));
 	});
 
-	test('set log level to info', function () {
-		testObject = aTestObject(logFile);
+	test('set log level to info', async function () {
+		testObject = await aTestObject(logFile);
 		testObject.setLevel(2);
 		testObject.trace('This trace message should not be written');
 		testObject.flush();
 
-		let actual = getLastLine();
+		let actual = await getLastLine();
 		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written'));
 
 		testObject.debug('This debug message should not be written');
 
-		actual = getLastLine();
+		actual = await getLastLine();
 		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written'));
 	});
 
-	test('set global log level to trace', function () {
-		testObject = aTestObject(logFile);
+	test('set global log level to trace', async function () {
+		testObject = await aTestObject(logFile);
 		spdlog.setLevel(0);
 
 		testObject.trace('This trace message should be written');
 
-		const actual = getLastLine();
+		const actual = await getLastLine();
 		assert.ok(actual.endsWith('[test] [trace] This trace message should be written'));
 	});
 
-	test('set global log level to debug', function () {
-		testObject = aTestObject(logFile);
+	test('set global log level to debug', async function () {
+		testObject = await aTestObject(logFile);
 		spdlog.setLevel(1);
 
 		testObject.trace('This trace message should not be written');
 
-		let actual = getLastLine();
+		let actual = await getLastLine();
 		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written'));
 	});
 
-	test('set global log level to info', function () {
-		testObject = aTestObject(logFile);
+	test('set global log level to info', async function () {
+		testObject = await aTestObject(logFile);
 		spdlog.setLevel(2);
 
 		testObject.trace('This trace message should not be written');
 
-		let actual = getLastLine();
+		let actual = await getLastLine();
 		assert.ok(!actual.endsWith('[test] [trace] This trace message should not be written'));
 
 		testObject.debug('This debug message should not be written');
 
-		actual = getLastLine();
+		actual = await getLastLine();
 		assert.ok(!actual.endsWith('[test] [debug] This debug message should not be written'));
 	});
 
-	test('drop logger and create logger with same name and same file', function () {
-		testObject = aTestObject(logFile);
+	test('drop logger and create logger with same name and same file', async function () {
+		testObject = await aTestObject(logFile);
 	});
 
 	test('set async mode', function () {
 		spdlog.setAsyncMode(8192, 2000);
 	});
 
-	test('set pattern', function () {
-		testObject = aTestObject(logFile);
+	test('set pattern', async function () {
+		testObject = await aTestObject(logFile);
 
 		testObject.setPattern('%v');
 
 		testObject.info('This message should be written as is');
 
-		const actual = getLastLine();
+		const actual = await getLastLine();
 		assert.equal(actual, 'This message should be written as is');
 	});
 
-	test('clear formatters', function () {
-		testObject = aTestObject(logFile);
+	test('clear formatters', async function () {
+		testObject = await aTestObject(logFile);
 
 		testObject.clearFormatters();
 
@@ -265,7 +262,7 @@ suite('API', function () {
 		testObject.info('written ');
 		testObject.info('as is');
 
-		const actuals = getAllLines();
+		const actuals = await getAllLines();
 		assert.equal(actuals[actuals.length - 1], 'Cleared Formatters: This message should be written as is');
 	});
 
@@ -275,21 +272,21 @@ suite('API', function () {
 		testObject = new spdlog.RotatingLogger('test', file, 1048576 * 5, 2);
 	});
 
-	function getLastLine() {
-		const lines = getAllLines();
+	async function getLastLine() {
+		const lines = await getAllLines();
 		return lines[lines.length - 2];
 	}
 
-	function aTestObject(logfile) {
-		const logger = new spdlog.RotatingLogger('test', logfile, 1048576 * 5, 2);
+	async function aTestObject(logfile) {
+		const logger = await spdlog.createRotatingLoggerAsync('test', logfile, 1048576 * 5, 2);
 		logger.setPattern('%+');
 		return logger;
 	}
 
-	function getAllLines() {
+	async function getAllLines() {
 		testObject.drop();
 		const content = fs.readFileSync(logFile).toString();
-		testObject = aTestObject(logFile);
+		testObject = await aTestObject(logFile);
 		return content.split(EOL);
 	}
 

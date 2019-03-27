@@ -17,4 +17,23 @@ class RotatingLogger extends spdlog.Logger {
 	}
 }
 
+function createRotatingLoggerAsync(name, filepath, maxFileSize, maxFiles) {
+	return new Promise((c, e) => {
+		const dirname = path.dirname(filepath);
+		mkdirp(dirname, err => {
+			if (err) {
+				e(err);
+			} else {
+				c(createRotatingLogger(name, filepath, maxFileSize, maxFiles));
+			}
+		})
+	});
+}
+
+function createRotatingLogger(name, filepath, maxFileSize, maxFiles) {
+	return new spdlog.Logger('rotating', name, filepath, maxFileSize, maxFiles);
+}
+
+exports.createRotatingLoggerAsync = createRotatingLoggerAsync;
+exports.createRotatingLogger = createRotatingLogger;
 exports.RotatingLogger = RotatingLogger;
