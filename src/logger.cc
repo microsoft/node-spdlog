@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-#include <nan.h>
 #include "logger.h"
 
 NAN_METHOD(setAsyncMode)
@@ -17,7 +16,9 @@ NAN_METHOD(setAsyncMode)
 		return Nan::ThrowError(Nan::Error("Provide a flush interval in milliseconds as second parameter"));
 	}
 
-	spdlog::set_async_mode(info[0]->IntegerValue(), spdlog::async_overflow_policy::block_retry, nullptr, std::chrono::milliseconds(info[1]->IntegerValue()));
+	spdlog::set_async_mode(Nan::To<int64_t>(info[0]).FromJust(),
+						   spdlog::async_overflow_policy::block_retry, nullptr,
+						   std::chrono::milliseconds(Nan::To<int64_t>(info[1]).FromJust()));
 }
 
 NAN_METHOD(setLevel)
@@ -27,7 +28,7 @@ NAN_METHOD(setLevel)
 		return Nan::ThrowError(Nan::Error("Provide level"));
 	}
 
-	const int numberValue = info[0]->IntegerValue();
+	const int64_t numberValue = Nan::To<int64_t>(info[0]).FromJust();
 	spdlog::level::level_enum level;
 	switch (numberValue)
 	{
@@ -146,7 +147,9 @@ NAN_METHOD(Logger::New)
 						const std::string fileName = *Nan::Utf8String(info[2]);
 					#endif
 
-					logger = spdlog::rotating_logger_mt(logName, fileName, info[3]->IntegerValue(), info[4]->IntegerValue());
+					logger = spdlog::rotating_logger_mt(logName, fileName,
+														Nan::To<int64_t>(info[3]).FromJust(),
+													    Nan::To<int64_t>(info[4]).FromJust());
 				}
 			}
 			else
@@ -304,7 +307,7 @@ NAN_METHOD(Logger::SetLevel)
 
 	if (obj->logger_)
 	{
-		const int numberValue = info[0]->IntegerValue();
+		const int64_t numberValue = Nan::To<int64_t>(info[0]).FromJust();
 		spdlog::level::level_enum level;
 		switch (numberValue)
 		{
