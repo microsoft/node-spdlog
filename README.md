@@ -6,7 +6,7 @@ Spdlog bindings for Node.JS
 
 ## Publishing to NPM
 
-Simply push a new tag and the CI will automatically publish to NPM. The usual flow is:
+Simply push a new tag and the [CI](https://dev.azure.com/vscode/node-spdlog/_build/latest?definitionId=27&branchName=master) will automatically publish to NPM. The usual flow is:
 
 ```sh
 npm version [minor|patch]
