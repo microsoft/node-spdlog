@@ -4,21 +4,42 @@ trigger:
   tags:
     include: ['*']
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: "12.x"
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - template: build.yml
 
-- script: npm install
-  displayName: Install Dependencies
+- job: macOS
+  pool:
+    vmImage: 'macos-10.13'
+  steps:
+  - template: build.yml
 
-- script: npm test
-  displayName: Run Tests
+- job: Linux
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - template: build.yml
 
-- task: Npm@1
-  displayName: 'Publish to NPM'
-  inputs:
-    command: publish
-    verbose: false
-    publishEndpoint: 'NPM'
+- job: Release
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  pool:
+    vmImage: 'Ubuntu-16.04'
+  dependsOn:
+  - Windows
+  - macOS
+  - Linux
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "12.x"
+  - script: npm install
+    displayName: Install Dependencies
+  - task: Npm@1
+    displayName: 'Publish to NPM'
+    inputs:
+      command: publish
+      verbose: false
+      publishEndpoint: 'NPM'
