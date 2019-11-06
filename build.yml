@@ -15,4 +15,4 @@ steps:
     command: publish
     verbose: false
     publishEndpoint: 'NPM'
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  condition: and(succeeded(), eq(variables['Agent.JobName'], 'Linux'), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
