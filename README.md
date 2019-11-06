@@ -1,7 +1,6 @@
 # node-spdlog
 
-[![Build Status](https://travis-ci.org/Microsoft/node-spdlog.svg?branch=master)](https://travis-ci.org/Microsoft/node-spdlog)
-[![Build status](https://ci.appveyor.com/api/projects/status/49asf64gs8irlw60?svg=true)](https://ci.appveyor.com/project/VSCode/node-spdlog)
+[![Build Status](https://dev.azure.com/vscode/node-spdlog/_apis/build/status/microsoft.node-spdlog?branchName=master)](https://dev.azure.com/vscode/node-spdlog/_build/latest?definitionId=27&branchName=master) [![npm version](https://badge.fury.io/js/spdlog.svg)](https://badge.fury.io/js/spdlog)
 
 Spdlog bindings for Node.JS
 
