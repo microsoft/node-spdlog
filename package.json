@@ -1,6 +1,6 @@
 {
   "name": "spdlog",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Node bindings for spdlog",
   "main": "index.js",
   "types": "index.d.ts",
