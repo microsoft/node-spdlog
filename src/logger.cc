@@ -4,21 +4,24 @@
  *  license information.
  *--------------------------------------------------------------------------------------------*/
 
+#include <spdlog/async.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_sinks.h>
+
 #include "logger.h"
 
-NAN_METHOD(setAsyncMode) {
+NAN_METHOD(initThreadPool) {
   if (!info[0]->IsNumber()) {
     return Nan::ThrowError(Nan::Error("Provide queue size as first parameter"));
   }
   if (!info[1]->IsNumber()) {
     return Nan::ThrowError(Nan::Error(
-        "Provide a flush interval in milliseconds as second parameter"));
+        "Provide thread count as second parameter"));
   }
 
-  spdlog::set_async_mode(
+  spdlog::init_thread_pool(
       Nan::To<int64_t>(info[0]).FromJust(),
-      spdlog::async_overflow_policy::block_retry, nullptr,
-      std::chrono::milliseconds(Nan::To<int64_t>(info[1]).FromJust()));
+      Nan::To<int64_t>(info[1]).FromJust());
 }
 
 NAN_METHOD(setLevel) {
@@ -59,8 +62,7 @@ NAN_METHOD(setLevel) {
 Nan::Persistent<v8::Function> Logger::constructor;
 
 NAN_MODULE_INIT(Logger::Init) {
-  spdlog::set_async_mode(8192, spdlog::async_overflow_policy::block_retry,
-                         nullptr, std::chrono::seconds(1));
+  spdlog::init_thread_pool(8192, 1);
 
   v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
   tpl->SetClassName(Nan::New("Logger").ToLocalChecked());
