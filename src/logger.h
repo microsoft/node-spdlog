@@ -19,8 +19,9 @@
 
 #include <spdlog/spdlog.h>
 
-NAN_METHOD(initThreadPool);
 NAN_METHOD(setLevel);
+NAN_METHOD(setFlushEvery);
+NAN_METHOD(shutdown);
 
 class Logger : public Nan::ObjectWrap {
  public:

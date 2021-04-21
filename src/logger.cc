@@ -4,25 +4,12 @@
  *  license information.
  *--------------------------------------------------------------------------------------------*/
 
+#include <chrono>
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_sinks.h>
 
 #include "logger.h"
-
-NAN_METHOD(initThreadPool) {
-  if (!info[0]->IsNumber()) {
-    return Nan::ThrowError(Nan::Error("Provide queue size as first parameter"));
-  }
-  if (!info[1]->IsNumber()) {
-    return Nan::ThrowError(Nan::Error(
-        "Provide thread count as second parameter"));
-  }
-
-  spdlog::init_thread_pool(
-      Nan::To<int64_t>(info[0]).FromJust(),
-      Nan::To<int64_t>(info[1]).FromJust());
-}
 
 NAN_METHOD(setLevel) {
   if (!info[0]->IsNumber()) {
@@ -59,11 +46,23 @@ NAN_METHOD(setLevel) {
   spdlog::set_level(level);
 }
 
+NAN_METHOD(setFlushEvery) {
+  if (!info[0]->IsNumber()) {
+    return Nan::ThrowError(Nan::Error("Provide number of seconds between flushes"));
+  }
+
+  const int64_t numberValue = Nan::To<int64_t>(info[0]).FromJust();
+  std::chrono::seconds interval = std::chrono::duration<int64_t>(numberValue);
+  spdlog::flush_every(interval);
+}
+
+NAN_METHOD(shutdown) {
+  spdlog::shutdown();
+}
+
 Nan::Persistent<v8::Function> Logger::constructor;
 
 NAN_MODULE_INIT(Logger::Init) {
-  spdlog::init_thread_pool(8192, 1);
-
   v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
   tpl->SetClassName(Nan::New("Logger").ToLocalChecked());
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
@@ -113,7 +112,7 @@ NAN_METHOD(Logger::New) {
       const std::string name = *Nan::Utf8String(info[0]);
       std::shared_ptr<spdlog::logger> logger;
 
-      if (name == "rotating") {
+      if (name == "rotating" || name == "rotating_async") {
         if (!info[1]->IsString() || !info[2]->IsString()) {
           return Nan::ThrowError(
               Nan::Error("Provide the log name and file name"));
@@ -135,12 +134,18 @@ NAN_METHOD(Logger::New) {
           const std::string fileName = *Nan::Utf8String(info[2]);
 #endif
 
-          logger = spdlog::rotating_logger_mt(
-              logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
-              Nan::To<int64_t>(info[4]).FromJust());
+          if (name == "rotating_async") {
+            logger = spdlog::rotating_logger_st<spdlog::async_factory>(
+                logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
+                Nan::To<int64_t>(info[4]).FromJust());
+          } else {
+            logger = spdlog::rotating_logger_st(
+                logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
+                Nan::To<int64_t>(info[4]).FromJust());
+          }
         }
       } else {
-        logger = spdlog::stdout_logger_mt(name);
+        logger = spdlog::stdout_logger_st(name);
       }
       Logger *obj = new Logger(logger);
       obj->Wrap(info.This());

@@ -46,6 +46,7 @@ suite('API', function () {
 	});
 
 	suiteTeardown(() => {
+		spdlog.shutdown();
 		filesToDelete.forEach(file => {
 			if (fs.existsSync(file)) {
 				fs.unlinkSync(file);
@@ -55,6 +56,10 @@ suite('API', function () {
 
 	test('Version', function () {
 		assert.strictEqual(spdlog.version, 10805);
+	});
+
+	test('SetFlushEvery', function() {
+		spdlog.setFlushEvery(1);
 	});
 
 	test('Logger is present', function () {
@@ -224,10 +229,6 @@ suite('API', function () {
 		testObject = await aTestObject(logFile);
 	});
 
-	test('set async mode', function () {
-		spdlog.initThreadPool(8192, 1);
-	});
-
 	test('set pattern', async function () {
 		testObject = await aTestObject(logFile);
 
@@ -257,7 +258,7 @@ suite('API', function () {
 	test('create log file with special characters in file name', function () {
 		let file = path.join(__dirname, 'abcdø', 'test.log');
 		filesToDelete.push(file);
-		testObject = new spdlog.RotatingLogger('test', file, 1048576 * 5, 2);
+		testObject = new spdlog.Logger('rotating', 'test', file, 1048576 * 5, 2);
 	});
 
 	async function getLastLine() {
@@ -266,7 +267,7 @@ suite('API', function () {
 	}
 
 	async function aTestObject(logfile) {
-		const logger = await spdlog.createRotatingLoggerAsync('test', logfile, 1048576 * 5, 2);
+		const logger = await spdlog.createAsyncRotatingLoggerAsync('test', logfile, 1048576 * 5, 2);
 		logger.setPattern('%+');
 		return logger;
 	}
@@ -277,5 +278,4 @@ suite('API', function () {
 		testObject = await aTestObject(logFile);
 		return content.split(EOL);
 	}
-
 });
