@@ -112,7 +112,7 @@ NAN_METHOD(Logger::New) {
       const std::string name = *Nan::Utf8String(info[0]);
       std::shared_ptr<spdlog::logger> logger;
 
-      if (name == "rotating" || name == "rotating_async") {
+      if (name == "rotating") {
         if (!info[1]->IsString() || !info[2]->IsString()) {
           return Nan::ThrowError(
               Nan::Error("Provide the log name and file name"));
@@ -134,18 +134,12 @@ NAN_METHOD(Logger::New) {
           const std::string fileName = *Nan::Utf8String(info[2]);
 #endif
 
-          if (name == "rotating_async") {
-            logger = spdlog::rotating_logger_st<spdlog::async_factory>(
-                logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
-                Nan::To<int64_t>(info[4]).FromJust());
-          } else {
-            logger = spdlog::rotating_logger_st(
-                logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
-                Nan::To<int64_t>(info[4]).FromJust());
-          }
+          logger = spdlog::rotating_logger_st<spdlog::async_factory>(
+              logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
+            Nan::To<int64_t>(info[4]).FromJust());
         }
       } else {
-        logger = spdlog::stdout_logger_st(name);
+        logger = spdlog::stdout_logger_st<spdlog::async_factory>(name);
       }
       Logger *obj = new Logger(logger);
       obj->Wrap(info.This());

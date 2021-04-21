@@ -267,7 +267,7 @@ suite('API', function () {
 	}
 
 	async function aTestObject(logfile) {
-		const logger = await spdlog.createAsyncRotatingLoggerAsync('test', logfile, 1048576 * 5, 2);
+		const logger = await spdlog.createRotatingLogger('test', logfile, 1048576 * 5, 2);
 		logger.setPattern('%+');
 		return logger;
 	}
