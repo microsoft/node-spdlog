@@ -255,10 +255,13 @@ suite('API', function () {
 		assert.strictEqual(actuals[actuals.length - 1], 'Cleared Formatters: This message should be written as is');
 	});
 
-	test('create log file with special characters in file name', function () {
+	test('create log file with special characters in file name', async function () {
 		let file = path.join(__dirname, 'abcdø', 'test.log');
 		filesToDelete.push(file);
 		testObject = new spdlog.Logger('rotating', 'test', file, 1048576 * 5, 2);
+		assert.ok(testObject);
+		testObject = await spdlog.createRotatingLogger('test', file, 1048576 * 5, 2);
+		assert.ok(testObject);
 	});
 
 	async function getLastLine() {
@@ -267,7 +270,7 @@ suite('API', function () {
 	}
 
 	async function aTestObject(logfile) {
-		const logger = await spdlog.createRotatingLogger('test', logfile, 1048576 * 5, 2);
+		const logger = await spdlog.createAsyncRotatingLogger('test', logfile, 1048576 * 5, 2);
 		logger.setPattern('%+');
 		return logger;
 	}

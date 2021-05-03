@@ -52,7 +52,7 @@ NAN_METHOD(setFlushEvery) {
   }
 
   const int64_t numberValue = Nan::To<int64_t>(info[0]).FromJust();
-  std::chrono::seconds interval = std::chrono::duration<int64_t>(numberValue);
+  std::chrono::seconds interval(numberValue);
   spdlog::flush_every(interval);
 }
 
@@ -112,7 +112,7 @@ NAN_METHOD(Logger::New) {
       const std::string name = *Nan::Utf8String(info[0]);
       std::shared_ptr<spdlog::logger> logger;
 
-      if (name == "rotating") {
+      if (name == "rotating" || name == "rotating_async") {
         if (!info[1]->IsString() || !info[2]->IsString()) {
           return Nan::ThrowError(
               Nan::Error("Provide the log name and file name"));
@@ -134,9 +134,15 @@ NAN_METHOD(Logger::New) {
           const std::string fileName = *Nan::Utf8String(info[2]);
 #endif
 
-          logger = spdlog::rotating_logger_st<spdlog::async_factory>(
+          if (logName == "rotating_async") {
+            logger = spdlog::rotating_logger_st<spdlog::async_factory>(
               logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
-            Nan::To<int64_t>(info[4]).FromJust());
+              Nan::To<int64_t>(info[4]).FromJust());
+          } else {
+            logger = spdlog::rotating_logger_st(
+              logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
+              Nan::To<int64_t>(info[4]).FromJust());
+          }
         }
       } else {
         logger = spdlog::stdout_logger_st<spdlog::async_factory>(name);

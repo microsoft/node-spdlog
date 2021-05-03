@@ -8,10 +8,11 @@ export const version: number;
 export function setFlushEvery(seconds: number);
 export function setLevel(level: number);
 export function shutdown();
-export function createRotatingLogger(name: string, filename: string, filesize: number, filecount: number): Promise<RotatingLogger>;
+export function createRotatingLogger(name: string, filename: string, filesize: number, filecount: number): Promise<Logger>;
+export function createAsyncRotatingLogger(name: string, filename: string, filesize: number, filecount: number): Promise<Logger>;
 
 export class Logger {
-    constructor(loggerType: "rotating" | "stdout", name: string, filename: string, filesize: number, filecount: number);
+    constructor(loggerType: "rotating" | "rotating_async" | "stdout_async", name: string, filename: string, filesize: number, filecount: number);
 
     trace(message: string): void;
     debug(message: string): void;
@@ -19,7 +20,9 @@ export class Logger {
     warn(message: string): void;
     error(message: string): void;
     critical(message: string): void;
+    getLevel(): number;
     setLevel(level: number): void;
+    setPattern(pattern: string): void;
     clearFormatters(): void;
     /**
      * A synchronous operation to flush the contents into file
