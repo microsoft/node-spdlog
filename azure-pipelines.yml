@@ -7,19 +7,19 @@ trigger:
 jobs:
 - job: Windows
   pool:
-    vmImage: 'vs2017-win2016'
+    vmImage: 'VS2017-Win2016'
   steps:
   - template: build.yml
 
 - job: macOS
   pool:
-    vmImage: 'macos-10.13'
+    vmImage: 'macOS-latest'
   steps:
   - template: build.yml
 
 - job: Linux
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'Ubuntu-18.04'
   dependsOn:
   - Windows
   - macOS
