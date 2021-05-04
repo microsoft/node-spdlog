@@ -50,16 +50,6 @@ NAN_METHOD(setLevel) {
   spdlog::set_level(level);
 }
 
-NAN_METHOD(setFlushEvery) {
-  if (!info[0]->IsNumber()) {
-    return Nan::ThrowError(Nan::Error("Provide number of seconds between flushes"));
-  }
-
-  const int64_t numberValue = Nan::To<int64_t>(info[0]).FromJust();
-  std::chrono::seconds interval(numberValue);
-  spdlog::flush_every(interval);
-}
-
 NAN_METHOD(shutdown) {
   spdlog::shutdown();
 }

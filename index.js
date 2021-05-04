@@ -3,7 +3,6 @@ const mkdirp = require('mkdirp');
 const spdlog = require('bindings')('spdlog');
 
 exports.version = spdlog.version;
-exports.setFlushEvery = spdlog.setFlushEvery;
 exports.setLevel = spdlog.setLevel;
 exports.shutdown = spdlog.shutdown;
 exports.Logger = spdlog.Logger;

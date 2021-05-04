@@ -58,10 +58,6 @@ suite('API', function () {
 		assert.strictEqual(spdlog.version, 10805);
 	});
 
-	test('SetFlushEvery', function() {
-		spdlog.setFlushEvery(1);
-	});
-
 	test('Logger is present', function () {
 		assert(typeof spdlog.Logger === 'function');
 	});
