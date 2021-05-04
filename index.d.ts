@@ -4,13 +4,14 @@
  *  license information.
  *--------------------------------------------------------------------------------------------*/
 
-export const version: string;
-export function setAsyncMode(bufferSize: number, flushInterval: number): void;
-export function createRotatingLogger(name: string, filename: string, filesize: number, filecount: number): RotatingLogger;
-export function createRotatingLoggerAsync(name: string, filename: string, filesize: number, filecount: number): Promise<RotatingLogger>;
+export const version: number;
+export function setLevel(level: number);
+export function shutdown();
+export function createRotatingLogger(name: string, filename: string, filesize: number, filecount: number): Promise<Logger>;
+export function createAsyncRotatingLogger(name: string, filename: string, filesize: number, filecount: number): Promise<Logger>;
 
-export class RotatingLogger {
-    constructor(name: string, filename: string, filesize: number, filecount: number);
+export class Logger {
+    constructor(loggerType: "rotating" | "rotating_async" | "stdout_async", name: string, filename: string, filesize: number, filecount: number);
 
     trace(message: string): void;
     debug(message: string): void;
@@ -18,7 +19,9 @@ export class RotatingLogger {
     warn(message: string): void;
     error(message: string): void;
     critical(message: string): void;
+    getLevel(): number;
     setLevel(level: number): void;
+    setPattern(pattern: string): void;
     clearFormatters(): void;
     /**
      * A synchronous operation to flush the contents into file

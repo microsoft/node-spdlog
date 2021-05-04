@@ -46,6 +46,7 @@ suite('API', function () {
 	});
 
 	suiteTeardown(() => {
+		spdlog.shutdown();
 		filesToDelete.forEach(file => {
 			if (fs.existsSync(file)) {
 				fs.unlinkSync(file);
@@ -53,20 +54,8 @@ suite('API', function () {
 		});
 	});
 
-	test('is loaded', function () {
-		const spdloghPath = path.join(__dirname, '..', 'deps', 'spdlog', 'include', 'spdlog', 'common.h');
-		const contents = fs.readFileSync(spdloghPath, 'utf8');
-		const version = /SPDLOG_VERSION "([\d\.]+)"/.exec(contents)[1];
-
-		assert.equal(spdlog.version, version);
-	});
-
-	test('is loaded', function () {
-		const spdloghPath = path.join(__dirname, '..', 'deps', 'spdlog', 'include', 'spdlog', 'common.h');
-		const contents = fs.readFileSync(spdloghPath, 'utf8');
-		const version = /SPDLOG_VERSION "([\d\.]+)"/.exec(contents)[1];
-
-		assert.equal(spdlog.version, version);
+	test('Version', function () {
+		assert.strictEqual(spdlog.version, 10805);
 	});
 
 	test('Logger is present', function () {
@@ -133,25 +122,25 @@ suite('API', function () {
 	test('set level', async function () {
 		testObject = await aTestObject(logFile);
 		testObject.setLevel(0);
-		assert.equal(testObject.getLevel(), 0);
+		assert.strictEqual(testObject.getLevel(), 0);
 
 		testObject.setLevel(1);
-		assert.equal(testObject.getLevel(), 1);
+		assert.strictEqual(testObject.getLevel(), 1);
 
 		testObject.setLevel(2);
-		assert.equal(testObject.getLevel(), 2);
+		assert.strictEqual(testObject.getLevel(), 2);
 
 		testObject.setLevel(3);
-		assert.equal(testObject.getLevel(), 3);
+		assert.strictEqual(testObject.getLevel(), 3);
 
 		testObject.setLevel(4);
-		assert.equal(testObject.getLevel(), 4);
+		assert.strictEqual(testObject.getLevel(), 4);
 
 		testObject.setLevel(5);
-		assert.equal(testObject.getLevel(), 5);
+		assert.strictEqual(testObject.getLevel(), 5);
 
 		testObject.setLevel(6);
-		assert.equal(testObject.getLevel(), 6);
+		assert.strictEqual(testObject.getLevel(), 6);
 	});
 
 	test('Off Log', async function () {
@@ -236,10 +225,6 @@ suite('API', function () {
 		testObject = await aTestObject(logFile);
 	});
 
-	test('set async mode', function () {
-		spdlog.setAsyncMode(8192, 2000);
-	});
-
 	test('set pattern', async function () {
 		testObject = await aTestObject(logFile);
 
@@ -248,7 +233,7 @@ suite('API', function () {
 		testObject.info('This message should be written as is');
 
 		const actual = await getLastLine();
-		assert.equal(actual, 'This message should be written as is');
+		assert.strictEqual(actual, 'This message should be written as is');
 	});
 
 	test('clear formatters', async function () {
@@ -263,13 +248,21 @@ suite('API', function () {
 		testObject.info('as is');
 
 		const actuals = await getAllLines();
-		assert.equal(actuals[actuals.length - 1], 'Cleared Formatters: This message should be written as is');
+		assert.strictEqual(actuals[actuals.length - 1], 'Cleared Formatters: This message should be written as is');
 	});
 
 	test('create log file with special characters in file name', function () {
 		let file = path.join(__dirname, 'abcdø', 'test.log');
 		filesToDelete.push(file);
-		testObject = new spdlog.RotatingLogger('test', file, 1048576 * 5, 2);
+		testObject = new spdlog.Logger('rotating', 'test', file, 1048576 * 5, 2);
+		assert.ok(testObject);
+	});
+
+	test('create log file with special characters in file name await', async function () {
+		let file = path.join(__dirname, 'abcdø', 'test.log');
+		filesToDelete.push(file);
+		testObject = await spdlog.createRotatingLogger('test', file, 1048576 * 5, 2);
+		assert.ok(testObject);
 	});
 
 	async function getLastLine() {
@@ -278,7 +271,7 @@ suite('API', function () {
 	}
 
 	async function aTestObject(logfile) {
-		const logger = await spdlog.createRotatingLoggerAsync('test', logfile, 1048576 * 5, 2);
+		const logger = await spdlog.createAsyncRotatingLogger('test', logfile, 1048576 * 5, 2);
 		logger.setPattern('%+');
 		return logger;
 	}
@@ -289,5 +282,4 @@ suite('API', function () {
 		testObject = await aTestObject(logFile);
 		return content.split(EOL);
 	}
-
 });

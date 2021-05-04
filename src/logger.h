@@ -19,8 +19,8 @@
 
 #include <spdlog/spdlog.h>
 
-NAN_METHOD(setAsyncMode);
 NAN_METHOD(setLevel);
+NAN_METHOD(shutdown);
 
 class Logger : public Nan::ObjectWrap {
  public:
@@ -52,9 +52,12 @@ class Logger : public Nan::ObjectWrap {
 };
 
 class VoidFormatter : public spdlog::formatter {
-  void format(spdlog::details::log_msg &msg) override {
-    msg.formatted << fmt::StringRef(msg.raw.data(), msg.raw.size());
-    msg.formatted.write("", -1);
+  void format(const spdlog::details::log_msg &msg, spdlog::memory_buf_t &dest) override {
+    spdlog::details::fmt_helper::append_string_view(msg.payload, dest);
+  }
+
+  std::unique_ptr<spdlog::formatter> clone() const override {
+    return spdlog::details::make_unique<VoidFormatter>();
   }
 };
 
