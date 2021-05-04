@@ -17,7 +17,7 @@
 					'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
 				}
 			}],
-			['OS=="windows"', {
+			['OS=="win"', {
 				'defines': [
 					'SPDLOG_WCHAR_FILENAMES'
 				]

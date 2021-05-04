@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 #include <chrono>
+#include <codecvt>
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_sinks.h>
