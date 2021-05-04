@@ -54,7 +54,7 @@ class Logger : public Nan::ObjectWrap {
 
 class VoidFormatter : public spdlog::formatter {
   void format(const spdlog::details::log_msg &msg, spdlog::memory_buf_t &dest) override {
-    dest.append(msg.payload.begin(), msg.payload.end());
+    spdlog::details::fmt_helper::append_string_view(msg.payload, dest);
   }
 
   std::unique_ptr<spdlog::formatter> clone() const override {
