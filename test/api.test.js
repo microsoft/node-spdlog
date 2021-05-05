@@ -261,7 +261,7 @@ suite('API', function () {
 	test('create log file with special characters in file name factory call', async function () {
 		let file = path.join(__dirname, 'abcdø', 'test.log');
 		filesToDelete.push(file);
-		testObject = spdlog.createRotatingLoggerSync('test', file, 1048576 * 5, 2);
+		testObject = await spdlog.createRotatingLogger('test', file, 1048576 * 5, 2);
 		assert.ok(testObject);
 	});
 

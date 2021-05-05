@@ -7,8 +7,8 @@ exports.setLevel = spdlog.setLevel;
 exports.shutdown = spdlog.shutdown;
 exports.Logger = spdlog.Logger;
 
-function createRotatingLoggerSync(name, filepath, maxFileSize, maxFiles) {
-	return new spdlog.Logger('rotating', name, filepath, maxFileSize, maxFiles);
+function createRotatingLogger(name, filepath, maxFileSize, maxFiles) {
+	return createLogger('rotating', name, filepath, maxFileSize, maxFiles);
 }
 
 function createAsyncRotatingLogger(name, filepath, maxFileSize, maxFiles) {
@@ -28,5 +28,5 @@ function createLogger(loggerType, name, filepath, maxFileSize, maxFiles) {
 	});
 }
 
-exports.createRotatingLoggerSync = createRotatingLoggerSync;
+exports.createRotatingLogger = createRotatingLogger;
 exports.createAsyncRotatingLogger = createAsyncRotatingLogger;
