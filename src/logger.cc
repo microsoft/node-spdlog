@@ -50,10 +50,6 @@ NAN_METHOD(setLevel) {
   spdlog::set_level(level);
 }
 
-NAN_METHOD(shutdown) {
-  spdlog::shutdown();
-}
-
 Nan::Persistent<v8::Function> Logger::constructor;
 
 NAN_MODULE_INIT(Logger::Init) {

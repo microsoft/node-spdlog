@@ -46,7 +46,6 @@ suite('API', function () {
 	});
 
 	suiteTeardown(() => {
-		spdlog.shutdown();
 		filesToDelete.forEach(file => {
 			if (fs.existsSync(file)) {
 				fs.unlinkSync(file);

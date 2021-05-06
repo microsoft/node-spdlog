@@ -20,7 +20,6 @@
 #include <spdlog/spdlog.h>
 
 NAN_METHOD(setLevel);
-NAN_METHOD(shutdown);
 
 class Logger : public Nan::ObjectWrap {
  public:
