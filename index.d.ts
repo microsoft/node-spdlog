@@ -5,8 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 export const version: number;
-export function setLevel(level: number);
-export function shutdown();
+export function setLevel(level: number): void;
+export function shutdown(): void;
 export function createRotatingLogger(name: string, filename: string, filesize: number, filecount: number): Promise<Logger>;
 export function createAsyncRotatingLogger(name: string, filename: string, filesize: number, filecount: number): Promise<Logger>;
 
