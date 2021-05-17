@@ -66,6 +66,22 @@ suite('API', function () {
 		assert.ok(fs.existsSync(logFile));
 	});
 
+	test('Log setFlushOn', async function () {
+		spdlog.setFlushOn(3); // 3 = warn
+		testObject = await aTestObject(logFile);
+		testObject.warn('H');
+		let actual = getLastLineNoFlushSync();
+		assert.ok(actual.endsWith('[test] [warning] H'));
+		testObject.info('1');
+		testObject.info('2');
+		testObject.info('3');
+		actual = getLastLineNoFlushSync();
+		assert.ok(actual.endsWith('[test] [warning] H'));
+		testObject.warn('J');
+		actual = getLastLineNoFlushSync();
+		assert.ok(actual.endsWith('[test] [warning] J'));
+	});
+
 	test('Log critical message', async function () {
 		testObject = await aTestObject(logFile);
 		testObject.critical('Hello World');
@@ -279,6 +295,16 @@ suite('API', function () {
 		testObject.drop();
 		const content = fs.readFileSync(logFile).toString();
 		testObject = await aTestObject(logFile);
+		return content.split(EOL);
+	}
+
+	function getLastLineNoFlushSync() {
+		const lines = getAllLinesNoFlushSync();
+		return lines[lines.length - 2];
+	}
+
+	function getAllLinesNoFlushSync() {
+		const content = fs.readFileSync(logFile).toString();
 		return content.split(EOL);
 	}
 });

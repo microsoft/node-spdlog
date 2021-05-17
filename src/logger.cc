@@ -20,9 +20,9 @@ NAN_METHOD(setLevel) {
     return Nan::ThrowError(Nan::Error("Provide level"));
   }
 
-  const int64_t numberValue = Nan::To<int64_t>(info[0]).FromJust();
+  const int64_t levelNumber = Nan::To<int64_t>(info[0]).FromJust();
   spdlog::level::level_enum level;
-  switch (numberValue) {
+  switch (levelNumber) {
     case spdlog::level::critical:
       level = spdlog::level::critical;
       break;
@@ -48,6 +48,41 @@ NAN_METHOD(setLevel) {
       return Nan::ThrowError(Nan::Error("Invalid level"));
   }
   spdlog::set_level(level);
+}
+
+NAN_METHOD(setFlushOn) {
+  if (!info[0]->IsNumber()) {
+    return Nan::ThrowError(Nan::Error("Provide flush level"));
+  }
+
+  const int64_t levelNumber = Nan::To<int64_t>(info[0]).FromJust();
+  spdlog::level::level_enum level;
+  switch (levelNumber) {
+    case spdlog::level::critical:
+      level = spdlog::level::critical;
+      break;
+    case spdlog::level::err:
+      level = spdlog::level::err;
+      break;
+    case spdlog::level::warn:
+      level = spdlog::level::warn;
+      break;
+    case spdlog::level::info:
+      level = spdlog::level::info;
+      break;
+    case spdlog::level::debug:
+      level = spdlog::level::debug;
+      break;
+    case spdlog::level::trace:
+      level = spdlog::level::trace;
+      break;
+    case spdlog::level::off:
+      level = spdlog::level::off;
+      break;
+    default:
+      return Nan::ThrowError(Nan::Error("Invalid level"));
+  }
+  spdlog::flush_on(level);
 }
 
 Nan::Persistent<v8::Function> Logger::constructor;
@@ -260,9 +295,9 @@ NAN_METHOD(Logger::SetLevel) {
   Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
 
   if (obj->logger_) {
-    const int64_t numberValue = Nan::To<int64_t>(info[0]).FromJust();
+    const int64_t levelNumber = Nan::To<int64_t>(info[0]).FromJust();
     spdlog::level::level_enum level;
-    switch (numberValue) {
+    switch (levelNumber) {
       case spdlog::level::critical:
         level = spdlog::level::critical;
         break;

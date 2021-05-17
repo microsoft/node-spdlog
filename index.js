@@ -4,6 +4,7 @@ const spdlog = require('bindings')('spdlog');
 
 exports.version = spdlog.version;
 exports.setLevel = spdlog.setLevel;
+exports.setFlushOn = spdlog.setFlushOn;
 exports.Logger = spdlog.Logger;
 
 function createRotatingLogger(name, filepath, maxFileSize, maxFiles) {

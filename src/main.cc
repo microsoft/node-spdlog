@@ -10,6 +10,7 @@
 NAN_MODULE_INIT(Init) {
   Nan::Set(target, Nan::New("version").ToLocalChecked(), Nan::New(SPDLOG_VERSION));
   Nan::SetMethod(target, "setLevel", setLevel);
+  Nan::SetMethod(target, "setFlushOn", setFlushOn);
 
   Logger::Init(target);
 }
