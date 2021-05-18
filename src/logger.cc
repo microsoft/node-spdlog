@@ -21,7 +21,7 @@ NAN_METHOD(setLevel) {
   }
 
   const int64_t levelNumber = Nan::To<int64_t>(info[0]).FromJust();
-  if (levelNumber >= spdlog::level::n_levels || levelNumber < 0) {
+  if (levelNumber >= spdlog::level::n_levels || levelNumber < spdlog::level::trace) {
     return Nan::ThrowError(Nan::Error("Invalid level"));
   }
   auto level = static_cast<spdlog::level::level_enum>(levelNumber);
@@ -254,7 +254,7 @@ NAN_METHOD(Logger::SetLevel) {
 
   if (obj->logger_) {
     const int64_t levelNumber = Nan::To<int64_t>(info[0]).FromJust();
-    if (levelNumber >= spdlog::level::n_levels || levelNumber < 0) {
+    if (levelNumber >= spdlog::level::n_levels || levelNumber < spdlog::level::trace) {
       return Nan::ThrowError(Nan::Error("Invalid level"));
     }
     auto level = static_cast<spdlog::level::level_enum>(levelNumber);
