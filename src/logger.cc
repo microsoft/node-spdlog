@@ -21,32 +21,11 @@ NAN_METHOD(setLevel) {
   }
 
   const int64_t levelNumber = Nan::To<int64_t>(info[0]).FromJust();
-  spdlog::level::level_enum level;
-  switch (levelNumber) {
-    case spdlog::level::critical:
-      level = spdlog::level::critical;
-      break;
-    case spdlog::level::err:
-      level = spdlog::level::err;
-      break;
-    case spdlog::level::warn:
-      level = spdlog::level::warn;
-      break;
-    case spdlog::level::info:
-      level = spdlog::level::info;
-      break;
-    case spdlog::level::debug:
-      level = spdlog::level::debug;
-      break;
-    case spdlog::level::trace:
-      level = spdlog::level::trace;
-      break;
-    case spdlog::level::off:
-      level = spdlog::level::off;
-      break;
-    default:
-      return Nan::ThrowError(Nan::Error("Invalid level"));
+  if (levelNumber >= spdlog::level::n_levels || levelNumber < 0) {
+    return Nan::ThrowError(Nan::Error("Invalid level"));
   }
+  auto level = static_cast<spdlog::level::level_enum>(levelNumber);
+
   spdlog::set_level(level);
 }
 
@@ -56,32 +35,11 @@ NAN_METHOD(setFlushOn) {
   }
 
   const int64_t levelNumber = Nan::To<int64_t>(info[0]).FromJust();
-  spdlog::level::level_enum level;
-  switch (levelNumber) {
-    case spdlog::level::critical:
-      level = spdlog::level::critical;
-      break;
-    case spdlog::level::err:
-      level = spdlog::level::err;
-      break;
-    case spdlog::level::warn:
-      level = spdlog::level::warn;
-      break;
-    case spdlog::level::info:
-      level = spdlog::level::info;
-      break;
-    case spdlog::level::debug:
-      level = spdlog::level::debug;
-      break;
-    case spdlog::level::trace:
-      level = spdlog::level::trace;
-      break;
-    case spdlog::level::off:
-      level = spdlog::level::off;
-      break;
-    default:
-      return Nan::ThrowError(Nan::Error("Invalid level"));
+  if (levelNumber >= spdlog::level::n_levels || levelNumber < 0) {
+    return Nan::ThrowError(Nan::Error("Invalid level"));
   }
+  auto level = static_cast<spdlog::level::level_enum>(levelNumber);
+
   spdlog::flush_on(level);
 }
 
@@ -296,32 +254,10 @@ NAN_METHOD(Logger::SetLevel) {
 
   if (obj->logger_) {
     const int64_t levelNumber = Nan::To<int64_t>(info[0]).FromJust();
-    spdlog::level::level_enum level;
-    switch (levelNumber) {
-      case spdlog::level::critical:
-        level = spdlog::level::critical;
-        break;
-      case spdlog::level::err:
-        level = spdlog::level::err;
-        break;
-      case spdlog::level::warn:
-        level = spdlog::level::warn;
-        break;
-      case spdlog::level::info:
-        level = spdlog::level::info;
-        break;
-      case spdlog::level::debug:
-        level = spdlog::level::debug;
-        break;
-      case spdlog::level::trace:
-        level = spdlog::level::trace;
-        break;
-      case spdlog::level::off:
-        level = spdlog::level::off;
-        break;
-      default:
-        return Nan::ThrowError(Nan::Error("Invalid level"));
+    if (levelNumber >= spdlog::level::n_levels || levelNumber < 0) {
+      return Nan::ThrowError(Nan::Error("Invalid level"));
     }
+    auto level = static_cast<spdlog::level::level_enum>(levelNumber);
     obj->logger_->set_level(level);
   }
 

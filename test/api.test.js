@@ -156,6 +156,21 @@ suite('API', function () {
 
 		testObject.setLevel(6);
 		assert.strictEqual(testObject.getLevel(), 6);
+
+		let failedToThrow = false;
+		try {
+			testObject.setLevel(7);
+			failedToThrow = true;
+		} catch {
+			assert.strictEqual(testObject.getLevel(), 6);
+		}
+		try {
+			testObject.setLevel(-1);
+			failedToThrow = true;
+		} catch {
+			assert.strictEqual(testObject.getLevel(), 6);
+		}
+		assert.strictEqual(failedToThrow, false);
 	});
 
 	test('Off Log', async function () {
