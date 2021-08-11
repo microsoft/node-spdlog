@@ -54,7 +54,7 @@ suite('API', function () {
 	});
 
 	test('Version', function () {
-		assert.strictEqual(spdlog.version, 10805);
+		assert.strictEqual(spdlog.version, 10900);
 	});
 
 	test('Logger is present', function () {
