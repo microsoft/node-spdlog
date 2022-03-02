@@ -11,6 +11,20 @@
 		],
 		'cflags!': ['-fno-exceptions'],
 		'cflags_cc!': ['-fno-exceptions'],
+		'msvs_settings': {
+			'VCCLCompilerTool': {
+				'ExceptionHandling': 1,
+				'AdditionalOptions': [
+					'/Qspectre',
+					'/guard:cf'
+				]
+			},
+			'VCLinkerTool': {
+				'AdditionalOptions': [
+					'/guard:cf'
+				]
+			}
+		},
 		'conditions': [
 			['OS=="mac"', {
 				'xcode_settings': {
