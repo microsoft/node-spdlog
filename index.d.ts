@@ -10,6 +10,16 @@ export function setFlushOn(level: number): void;
 export function createRotatingLogger(name: string, filename: string, filesize: number, filecount: number): Promise<Logger>;
 export function createAsyncRotatingLogger(name: string, filename: string, filesize: number, filecount: number): Promise<Logger>;
 
+export enum LogLevel {
+    Trace,
+    Debug,
+    Info,
+    Warning,
+    Error,
+    Critical,
+    Off
+}
+
 export class Logger {
     constructor(loggerType: "rotating" | "rotating_async" | "stdout_async", name: string, filename: string, filesize: number, filecount: number);
 
