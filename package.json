@@ -4,6 +4,9 @@
   "description": "Node bindings for spdlog",
   "main": "index.js",
   "types": "index.d.ts",
+  "mocha": {
+    "ui": "tdd"
+  },
   "scripts": {
     "dev": "cp -R ~/.node-gyp/$(node -p 'process.versions.node')/include/node deps/node",
     "test": "mocha"
@@ -30,11 +33,11 @@
   "dependencies": {
     "bindings": "^1.5.0",
     "mkdirp": "^0.5.5",
-    "nan": "^2.14.0"
+    "nan": "^2.17.0"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.44",
-    "@types/node": "^8.0.53",
-    "mocha": "^6.2.3"
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^16.0.0",
+    "mocha": "^10.1.0"
   }
 }
