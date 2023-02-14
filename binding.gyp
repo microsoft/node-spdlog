@@ -13,13 +13,13 @@
 		'cflags_cc!': ['-fno-exceptions'],
 		'msvs_settings': {
 			'VCCLCompilerTool': {
-    			'ExceptionHandling': 1,
+				'ExceptionHandling': 1,
 				'AdditionalOptions': [
 					'/Qspectre',
 					'/guard:cf',
 					'/we4244',
-                    '/we4267',
-                    '/ZH:SHA_256'
+					'/we4267',
+					'/ZH:SHA_256'
 				]
 			},
 			'VCLinkerTool': {
