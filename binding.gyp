@@ -11,11 +11,13 @@
 		],
 		'cflags!': ['-fno-exceptions'],
 		'cflags_cc!': ['-fno-exceptions'],
+		'msvs_configuration_attributes': {
+			'SpectreMitigation': 'Spectre'
+		},
 		'msvs_settings': {
 			'VCCLCompilerTool': {
 				'ExceptionHandling': 1,
 				'AdditionalOptions': [
-					'/Qspectre',
 					'/guard:cf',
 					'/we4244',
 					'/we4267',
