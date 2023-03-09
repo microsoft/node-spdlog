@@ -8,6 +8,8 @@
     "ui": "tdd"
   },
   "scripts": {
+    "preinstall": "git submodule update --init",
+    "install": "node-gyp rebuild",
     "dev": "cp -R ~/.node-gyp/$(node -p 'process.versions.node')/include/node deps/node",
     "test": "mocha"
   },
