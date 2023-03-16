@@ -1,5 +1,5 @@
 {
-  "name": "spdlog",
+  "name": "@vscode/spdlog",
   "version": "0.13.8",
   "description": "Node bindings for spdlog",
   "main": "index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/node-spdlog.git"
+    "url": "git+https://github.com/microsoft/node-spdlog.git"
   },
   "keywords": [
     "node",
@@ -29,9 +29,9 @@
   "author": "Microsoft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/node-spdlog/issues"
+    "url": "https://github.com/microsoft/node-spdlog/issues"
   },
-  "homepage": "https://github.com/Microsoft/node-spdlog#readme",
+  "homepage": "https://github.com/microsoft/node-spdlog#readme",
   "dependencies": {
     "bindings": "^1.5.0",
     "mkdirp": "^0.5.5",
