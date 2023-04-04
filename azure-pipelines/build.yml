@@ -3,7 +3,9 @@ steps:
   inputs:
     versionSpec: "16.x"
 
-- script: npm install
+- script: |
+    git submodule update --init
+    npm install
   displayName: Install Dependencies
 
 - script: npm test
