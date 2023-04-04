@@ -27,7 +27,9 @@ extends:
       - name: node-spdlog
 
         buildSteps:
-          - script: npm ci
+          - script: |
+              git submodule update --init
+              npm ci
             displayName: Install dependencies
 
         testPlatforms:
