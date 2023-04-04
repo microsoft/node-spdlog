@@ -12,7 +12,7 @@
 #include "logger.h"
 
 #if defined(_WIN32)
-#include <codecvt>
+#include <Windows.h>
 #endif
 
 NAN_METHOD(setLevel) {
@@ -110,21 +110,23 @@ NAN_METHOD(Logger::New) {
 
         if (!logger) {
 #if defined(_WIN32)
-          std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-          const std::wstring fileName =
-              converter.from_bytes(*Nan::Utf8String(info[2]));
+          const std::string utf8Filename = *Nan::Utf8String(info[2]);
+          const int bufferLen = MultiByteToWideChar(CP_UTF8, 0, utf8Filename.c_str(), -1, NULL, 0);
+          std::wstring fileName;
+          fileName.resize(bufferLen);
+          MultiByteToWideChar(CP_UTF8, 0, utf8Filename.c_str(), -1, &fileName[0], bufferLen);
 #else
           const std::string fileName = *Nan::Utf8String(info[2]);
 #endif
 
           if (logName == "rotating_async") {
             logger = spdlog::rotating_logger_st<spdlog::async_factory>(
-              logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
-              Nan::To<int64_t>(info[4]).FromJust());
+              logName, fileName, static_cast<size_t>(Nan::To<int64_t>(info[3]).FromJust()),
+              static_cast<size_t>(Nan::To<int64_t>(info[4]).FromJust()));
           } else {
             logger = spdlog::rotating_logger_st(
-              logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
-              Nan::To<int64_t>(info[4]).FromJust());
+              logName, fileName, static_cast<size_t>(Nan::To<int64_t>(info[3]).FromJust()),
+              static_cast<size_t>(Nan::To<int64_t>(info[4]).FromJust()));
           }
         }
       } else {
