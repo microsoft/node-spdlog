@@ -1,6 +1,6 @@
 {
   "name": "@vscode/spdlog",
-  "version": "0.13.8",
+  "version": "0.13.9",
   "description": "Node bindings for spdlog",
   "main": "index.js",
   "types": "index.d.ts",
@@ -8,8 +8,6 @@
     "ui": "tdd"
   },
   "scripts": {
-    "preinstall": "git submodule update --init",
-    "install": "node-gyp rebuild",
     "dev": "cp -R ~/.node-gyp/$(node -p 'process.versions.node')/include/node deps/node",
     "test": "mocha"
   },
