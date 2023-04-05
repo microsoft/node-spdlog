@@ -3,8 +3,9 @@ steps:
   inputs:
     versionSpec: "16.x"
 
-- script: |
+- powershell: |
     git submodule update --init
+    $env:npm_config_arch="$(ARCH)"
     npm install
   displayName: Install Dependencies
 

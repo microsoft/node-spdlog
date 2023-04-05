@@ -5,21 +5,35 @@ trigger:
     include: ['*']
 
 jobs:
-- job: Windows
+- job: Windows64
   pool:
     vmImage: 'windows-latest'
+  env:
+    ARCH: 'x64'
+  steps:
+  - template: build.yml
+
+- job: Windows32
+  pool:
+    vmImage: 'windows-latest'
+  env:
+    ARCH: 'ia32'
   steps:
   - template: build.yml
 
 - job: macOS
   pool:
     vmImage: 'macOS-latest'
+  env:
+    ARCH: 'x64'
   steps:
   - template: build.yml
 
 - job: Linux
   pool:
     vmImage: 'Ubuntu-latest'
+  env:
+    ARCH: 'x64'
   dependsOn:
   - Windows
   - macOS
