@@ -9,5 +9,7 @@ steps:
     npm install
   displayName: Install Dependencies
 
-- script: npm test
+- powershell: |
+    $env:npm_config_arch="$(NPM_ARCH)"
+    npm test
   displayName: Run Tests
