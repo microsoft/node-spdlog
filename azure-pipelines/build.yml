@@ -13,4 +13,4 @@ steps:
     $env:npm_config_arch="$(NPM_ARCH)"
     npm test
   displayName: Run Tests
-  condition: eq("$(NPM_ARCH)", "x64")
+  condition: eq($(NPM_ARCH), 'x64')
