@@ -35,7 +35,8 @@ jobs:
   variables:
     NPM_ARCH: 'x64'
   dependsOn:
-  - Windows
+  - Windows64
+  - Windows32
   - macOS
   steps:
   - template: build.yml
