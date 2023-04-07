@@ -111,14 +111,17 @@ NAN_METHOD(Logger::New) {
         if (!logger) {
 #if defined(_WIN32)
           const std::string utf8Filename = *Nan::Utf8String(info[2]);
-          const int bufferLen = MultiByteToWideChar(CP_UTF8, 0, utf8Filename.c_str(), -1, NULL, 0);
+          const int bufferLen = MultiByteToWideChar(
+              CP_UTF8, 0, utf8Filename.c_str(),
+              static_cast<int>(utf8Filename.size()), NULL, 0);
           if (!bufferLen) {
             return Nan::ThrowError(
               Nan::Error("Failed to determine buffer length for converting filename to wstring"));
           }
-          std::wstring fileName;
-          fileName.resize(bufferLen);
-          const int status = MultiByteToWideChar(CP_UTF8, 0, utf8Filename.c_str(), -1, &fileName[0], bufferLen);
+          std::wstring fileName(bufferLen, 0);
+          const int status = MultiByteToWideChar(
+              CP_UTF8, 0, utf8Filename.c_str(),
+              static_cast<int>(utf8Filename.size()), &fileName[0], bufferLen);
           if (!status) {
             return Nan::ThrowError(
               Nan::Error("Failed to convert filename to wstring"));
