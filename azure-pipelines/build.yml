@@ -3,10 +3,13 @@ steps:
   inputs:
     versionSpec: "16.x"
 
-- script: |
+- powershell: |
     git submodule update --init
+    $env:npm_config_arch="$(NPM_ARCH)"
     npm install
   displayName: Install Dependencies
 
-- script: npm test
+- powershell: |
+    npm test
   displayName: Run Tests
+  condition: eq(variables.NPM_ARCH, 'x64')

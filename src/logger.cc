@@ -12,7 +12,7 @@
 #include "logger.h"
 
 #if defined(_WIN32)
-#include <codecvt>
+#include <Windows.h>
 #endif
 
 NAN_METHOD(setLevel) {
@@ -110,21 +110,34 @@ NAN_METHOD(Logger::New) {
 
         if (!logger) {
 #if defined(_WIN32)
-          std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-          const std::wstring fileName =
-              converter.from_bytes(*Nan::Utf8String(info[2]));
+          const std::string utf8Filename = *Nan::Utf8String(info[2]);
+          const int bufferLen = MultiByteToWideChar(
+              CP_UTF8, 0, utf8Filename.c_str(),
+              static_cast<int>(utf8Filename.size()), NULL, 0);
+          if (!bufferLen) {
+            return Nan::ThrowError(
+              Nan::Error("Failed to determine buffer length for converting filename to wstring"));
+          }
+          std::wstring fileName(bufferLen, 0);
+          const int status = MultiByteToWideChar(
+              CP_UTF8, 0, utf8Filename.c_str(),
+              static_cast<int>(utf8Filename.size()), &fileName[0], bufferLen);
+          if (!status) {
+            return Nan::ThrowError(
+              Nan::Error("Failed to convert filename to wstring"));
+          }
 #else
           const std::string fileName = *Nan::Utf8String(info[2]);
 #endif
 
           if (logName == "rotating_async") {
             logger = spdlog::rotating_logger_st<spdlog::async_factory>(
-              logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
-              Nan::To<int64_t>(info[4]).FromJust());
+              logName, fileName, static_cast<size_t>(Nan::To<int64_t>(info[3]).FromJust()),
+              static_cast<size_t>(Nan::To<int64_t>(info[4]).FromJust()));
           } else {
             logger = spdlog::rotating_logger_st(
-              logName, fileName, Nan::To<int64_t>(info[3]).FromJust(),
-              Nan::To<int64_t>(info[4]).FromJust());
+              logName, fileName, static_cast<size_t>(Nan::To<int64_t>(info[3]).FromJust()),
+              static_cast<size_t>(Nan::To<int64_t>(info[4]).FromJust()));
           }
         }
       } else {
