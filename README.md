@@ -1,6 +1,6 @@
 # node-spdlog
 
-Spdlog bindings for Node.JS
+Spdlog bindings for Node.js
 
 [![Build Status](https://dev.azure.com/vscode/node-spdlog/_apis/build/status/microsoft.node-spdlog?branchName=main)](https://dev.azure.com/vscode/node-spdlog/_build/latest?definitionId=27&branchName=main)
 
