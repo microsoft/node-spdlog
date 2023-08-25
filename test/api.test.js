@@ -133,6 +133,23 @@ suite('API', function () {
 		assert.ok(actual.endsWith('[test] [trace] Hello World'));
 	});
 
+	['critical', ['warn', 'warning'], 'info', 'debug', 'trace'].map(async (param) => {
+		let name, header;
+		if (Array.isArray(param)) {
+			[name, header] = param;
+		} else {
+			name = header = param;
+		}
+		test(`Log ${name} includes U+0000`, async function () {
+			testObject = await aTestObject(logFile);
+			testObject.setLevel(0);
+			testObject[name]('a\u0000b');
+	
+			const actual = await getLastLine();
+			assert.ok(actual.endsWith(`[test] [${header}] a\u0000b`));
+		});
+	});
+
 
 	test('set level', async function () {
 		testObject = await aTestObject(logFile);

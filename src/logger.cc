@@ -15,6 +15,10 @@
 #include <Windows.h>
 #endif
 
+std::string utf8StringAsString(Nan::Utf8String&& str) {
+  return std::string(*str, str.length());
+}
+
 NAN_METHOD(setLevel) {
   if (!info[0]->IsNumber()) {
     return Nan::ThrowError(Nan::Error("Provide level"));
@@ -92,7 +96,7 @@ NAN_METHOD(Logger::New) {
         return Nan::ThrowError(Nan::Error("Provide a logger name"));
       }
 
-      const std::string name = *Nan::Utf8String(info[0]);
+      const std::string name = utf8StringAsString(Nan::Utf8String(info[0]));
       std::shared_ptr<spdlog::logger> logger;
 
       if (name == "rotating" || name == "rotating_async") {
@@ -104,13 +108,13 @@ NAN_METHOD(Logger::New) {
           return Nan::ThrowError(
               Nan::Error("Provide the max size and max files"));
         }
-        const std::string logName = *Nan::Utf8String(info[1]);
+        const std::string logName = utf8StringAsString(Nan::Utf8String(info[1]));
 
         logger = spdlog::get(logName);
 
         if (!logger) {
 #if defined(_WIN32)
-          const std::string utf8Filename = *Nan::Utf8String(info[2]);
+          const std::string utf8Filename = utf8StringAsString(Nan::Utf8String(info[2]));
           const int bufferLen = MultiByteToWideChar(
               CP_UTF8, 0, utf8Filename.c_str(),
               static_cast<int>(utf8Filename.size()), NULL, 0);
@@ -127,7 +131,7 @@ NAN_METHOD(Logger::New) {
               Nan::Error("Failed to convert filename to wstring"));
           }
 #else
-          const std::string fileName = *Nan::Utf8String(info[2]);
+          const std::string fileName = utf8StringAsString(Nan::Utf8String(info[2]));
 #endif
 
           if (logName == "rotating_async") {
@@ -166,9 +170,9 @@ NAN_METHOD(Logger::Critical) {
   }
 
   Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
-  const std::string message = *Nan::Utf8String(info[0]);
 
   if (obj->logger_) {
+    std::string message = utf8StringAsString(Nan::Utf8String(info[0]));
     obj->logger_->critical(message);
   }
 
@@ -181,9 +185,9 @@ NAN_METHOD(Logger::Error) {
   }
 
   Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
-  const std::string message = *Nan::Utf8String(info[0]);
 
   if (obj->logger_) {
+    std::string message = utf8StringAsString(Nan::Utf8String(info[0]));
     obj->logger_->error(message);
   }
 
@@ -196,9 +200,9 @@ NAN_METHOD(Logger::Warn) {
   }
 
   Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
-  const std::string message = *Nan::Utf8String(info[0]);
 
   if (obj->logger_) {
+    std::string message = utf8StringAsString(Nan::Utf8String(info[0]));
     obj->logger_->warn(message);
   }
 
@@ -211,9 +215,9 @@ NAN_METHOD(Logger::Info) {
   }
 
   Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
-  const std::string message = *Nan::Utf8String(info[0]);
 
   if (obj->logger_) {
+    std::string message = utf8StringAsString(Nan::Utf8String(info[0]));
     obj->logger_->info(message);
   }
 
@@ -226,9 +230,9 @@ NAN_METHOD(Logger::Debug) {
   }
 
   Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
-  const std::string message = *Nan::Utf8String(info[0]);
 
   if (obj->logger_) {
+    std::string message = utf8StringAsString(Nan::Utf8String(info[0]));
     obj->logger_->debug(message);
   }
 
@@ -241,9 +245,9 @@ NAN_METHOD(Logger::Trace) {
   }
 
   Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
-  const std::string message = *Nan::Utf8String(info[0]);
 
   if (obj->logger_) {
+    std::string message = utf8StringAsString(Nan::Utf8String(info[0]));
     obj->logger_->trace(message);
   }
 
@@ -304,7 +308,7 @@ NAN_METHOD(Logger::SetPattern) {
     return Nan::ThrowError(Nan::Error("Provide pattern"));
   }
   Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
-  const std::string pattern = *Nan::Utf8String(info[0]);
+  const std::string pattern = utf8StringAsString(Nan::Utf8String(info[0]));
 
   if (obj->logger_) {
     obj->logger_->set_pattern(pattern);
@@ -315,7 +319,6 @@ NAN_METHOD(Logger::SetPattern) {
 
 NAN_METHOD(Logger::ClearFormatters) {
   Logger *obj = Nan::ObjectWrap::Unwrap<Logger>(info.This());
-  const std::string pattern = *Nan::Utf8String(info[0]);
 
   if (obj->logger_) {
     obj->logger_->set_formatter(
