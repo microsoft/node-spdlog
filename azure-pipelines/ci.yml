@@ -10,6 +10,7 @@ jobs:
     vmImage: 'windows-latest'
   variables:
     NPM_ARCH: 'x64'
+    OS: 'windows'
   steps:
   - template: build.yml
 
@@ -17,6 +18,7 @@ jobs:
   pool: 1es-windows-2019-x64
   variables:
     NPM_ARCH: 'ia32'
+    OS: 'windows'
   steps:
   - template: build.yml
 
@@ -24,6 +26,7 @@ jobs:
   pool: macOS-11
   variables:
     NPM_ARCH: 'x64'
+    OS: 'macOS'
   steps:
   - template: build.yml
 
@@ -31,6 +34,7 @@ jobs:
   pool: 1es-oss-ubuntu-20.04-x64
   variables:
     NPM_ARCH: 'x64'
+    OS: 'Linux'
   dependsOn:
   - Windows64
   - Windows32
