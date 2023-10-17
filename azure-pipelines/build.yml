@@ -9,20 +9,6 @@ steps:
     npm install
   displayName: Install Dependencies
 
-- script: |
-    make --version
-    g++ --version
-    clang --version
-  displayName: Check tool versions (non-Windows)
-  condition: and(succeeded(), ne(variables.OS, 'windows'))
-
-- pwsh: |
-    & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe --version"
-    & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\CL.exe"
-    & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\link.exe"
-  displayName: Check tool versions (Windows)
-  condition: and(succeeded(), eq(variables.OS, 'windows'))
-
 - powershell: |
     npm test
   displayName: Run Tests
