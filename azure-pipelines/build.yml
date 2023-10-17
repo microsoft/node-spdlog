@@ -6,7 +6,7 @@ steps:
 - powershell: |
     git submodule update --init
     $env:npm_config_arch="$(NPM_ARCH)"
-    npm install
+    npm install --verbose
   displayName: Install Dependencies
 
 - powershell: |
