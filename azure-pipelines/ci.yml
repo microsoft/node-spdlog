@@ -14,24 +14,21 @@ jobs:
   - template: build.yml
 
 - job: Windows32
-  pool:
-    vmImage: 'windows-latest'
+  pool: 1es-windows-2019-x64
   variables:
     NPM_ARCH: 'ia32'
   steps:
   - template: build.yml
 
 - job: macOS
-  pool:
-    vmImage: 'macOS-latest'
+  pool: macOS-11
   variables:
     NPM_ARCH: 'x64'
   steps:
   - template: build.yml
 
 - job: Linux
-  pool:
-    vmImage: 'Ubuntu-latest'
+  pool: 1es-oss-ubuntu-20.04-x64
   variables:
     NPM_ARCH: 'x64'
   dependsOn:
