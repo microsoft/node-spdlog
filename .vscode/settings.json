@@ -74,5 +74,10 @@
 		"xtree": "cpp",
 		"xutility": "cpp",
 		"cerrno": "cpp"
-	}
+	},
+	"git.branchProtection": [
+		"main",
+	],
+	"git.branchProtectionPrompt": "alwaysCommitToNewBranch",
+	"git.branchRandomName.enable": true,
 }
