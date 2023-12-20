@@ -1,6 +1,6 @@
 {
   "name": "@vscode/spdlog",
-  "version": "0.13.12",
+  "version": "0.13.13",
   "description": "Node bindings for spdlog",
   "main": "index.js",
   "types": "index.d.ts",
