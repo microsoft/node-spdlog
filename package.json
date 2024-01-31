@@ -8,7 +8,6 @@
     "ui": "tdd"
   },
   "scripts": {
-    "dev": "cp -R ~/.node-gyp/$(node -p 'process.versions.node')/include/node deps/node",
     "test": "mocha"
   },
   "repository": {
@@ -20,9 +19,7 @@
     "spdlog",
     "logging",
     "logger",
-    "log",
-    "fast",
-    "performance"
+    "log"
   ],
   "author": "Microsoft",
   "license": "MIT",
@@ -33,7 +30,7 @@
   "dependencies": {
     "bindings": "^1.5.0",
     "mkdirp": "^1.0.4",
-    "nan": "^2.17.0"
+    "node-addon-api": "7.1.0"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.0",
