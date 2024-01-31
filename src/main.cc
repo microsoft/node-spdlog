@@ -4,15 +4,48 @@
  *  license information.
  *--------------------------------------------------------------------------------------------*/
 
-#include <nan.h>
+#include <napi.h>
 #include "logger.h"
 
-NAN_MODULE_INIT(Init) {
-  Nan::Set(target, Nan::New("version").ToLocalChecked(), Nan::New(SPDLOG_VERSION));
-  Nan::SetMethod(target, "setLevel", setLevel);
-  Nan::SetMethod(target, "setFlushOn", setFlushOn);
+void SetLevel(const Napi::CallbackInfo& info) {
+  Napi::Env env(info.Env());
 
-  Logger::Init(target);
+  if (!info[0].IsNumber()) {
+    throw Napi::Error::New(env, "Provide level");
+  }
+
+  const int64_t levelNumber = info[0].As<Napi::Number>().Int64Value();
+  if (levelNumber >= spdlog::level::n_levels || levelNumber < spdlog::level::trace) {
+    throw Napi::Error::New(env, "Invalid level");
+  }
+  auto level = static_cast<spdlog::level::level_enum>(levelNumber);
+
+  spdlog::set_level(level);
 }
 
-NODE_MODULE(spdlog, Init)
+void SetFlushOn(const Napi::CallbackInfo& info) {
+  Napi::Env env(info.Env());
+
+  if (!info[0].IsNumber()) {
+    throw Napi::Error::New(env, "Provide flush level");
+  }
+
+  const int64_t levelNumber = info[0].As<Napi::Number>().Int64Value();
+  if (levelNumber >= spdlog::level::n_levels || levelNumber < spdlog::level::trace) {
+    throw Napi::Error::New(env, "Invalid level");
+  }
+  auto level = static_cast<spdlog::level::level_enum>(levelNumber);
+
+  spdlog::flush_on(level);
+}
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
+  exports.Set("version", Napi::Number::New(env, SPDLOG_VERSION));
+  exports.Set("setLevel", Napi::Function::New(env, SetLevel));
+  exports.Set("setFlushOn", Napi::Function::New(env, SetFlushOn));
+
+  Logger::Init(env, exports);
+  return exports;
+}
+
+NODE_API_MODULE(NODE_GYP_MODULE_NAME, Init);

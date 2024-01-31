@@ -4,44 +4,32 @@
  *  license information.
  *--------------------------------------------------------------------------------------------*/
 
-#ifndef CONSOLE_H
-#define CONSOLE_H
-
-#include <nan.h>
+#include <napi.h>
 
 // Prevent child processes from inheriting the file handles
 #define SPDLOG_PREVENT_CHILD_FD
 
 #include <spdlog/spdlog.h>
 
-NAN_METHOD(setLevel);
-NAN_METHOD(setFlushOn);
 
-class Logger : public Nan::ObjectWrap {
+class Logger : public Napi::ObjectWrap<Logger> {
  public:
-  static NAN_MODULE_INIT(Init);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  explicit Logger(const Napi::CallbackInfo& info);
 
  private:
-  explicit Logger(std::shared_ptr<spdlog::logger> logger);
+  friend class Napi::ObjectWrap<Logger>;
   ~Logger();
 
-  static NAN_METHOD(New);
+  template<spdlog::level::level_enum level>
+  void Log(const Napi::CallbackInfo& info);
 
-  static NAN_METHOD(Critical);
-  static NAN_METHOD(Error);
-  static NAN_METHOD(Warn);
-  static NAN_METHOD(Info);
-  static NAN_METHOD(Debug);
-  static NAN_METHOD(Trace);
-
-  static NAN_METHOD(GetLevel);
-  static NAN_METHOD(SetLevel);
-  static NAN_METHOD(Flush);
-  static NAN_METHOD(Drop);
-  static NAN_METHOD(SetPattern);
-  static NAN_METHOD(ClearFormatters);
-
-  static Nan::Persistent<v8::Function> constructor;
+  Napi::Value GetLevel(const Napi::CallbackInfo& info);
+  void SetLevel(const Napi::CallbackInfo& info);
+  void Flush(const Napi::CallbackInfo& info);
+  void Drop(const Napi::CallbackInfo& info);
+  void SetPattern(const Napi::CallbackInfo& info);
+  void ClearFormatters(const Napi::CallbackInfo& info);
 
   std::shared_ptr<spdlog::logger> logger_;
 };
@@ -55,5 +43,3 @@ class VoidFormatter : public spdlog::formatter {
     return spdlog::details::make_unique<VoidFormatter>();
   }
 };
-
-#endif  // !CONSOLE_H

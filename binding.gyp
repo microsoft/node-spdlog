@@ -1,16 +1,17 @@
 {
 	"targets": [{
 		"target_name": "spdlog",
+		'dependencies': [
+      		"<!(node -p \"require('node-addon-api').targets\"):node_addon_api_except",
+		],
 		"sources": [
 			"src/main.cc",
 			"src/logger.cc"
 		],
 		"include_dirs": [
-			"<!(node -e \"require('nan')\")",
+			"<!(node -p \"require('node-addon-api').include_dir\")",
 			"deps/spdlog/include"
 		],
-		'cflags!': ['-fno-exceptions'],
-		'cflags_cc!': ['-fno-exceptions'],
 		'msvs_configuration_attributes': {
 			'SpectreMitigation': 'Spectre'
 		},
