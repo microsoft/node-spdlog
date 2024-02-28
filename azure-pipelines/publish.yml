@@ -52,4 +52,6 @@ extends:
           - script: npm run test
             displayName: Compile & test npm package
 
+        apiScanSoftwareName: 'vscode-spdlog'
+        apiScanSoftwareVersion: '0'
         publishPackage: ${{ parameters.publishPackage }}
