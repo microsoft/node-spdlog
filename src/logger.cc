@@ -18,18 +18,18 @@
 Napi::Object Logger::Init(Napi::Env env, Napi::Object exports) {
   Napi::FunctionReference* constructor = new Napi::FunctionReference();
   Napi::Function definition = DefineClass(env, "Logger", {
-    InstanceMethod<&Logger::GetLevel>("getLevel"),
-    InstanceMethod<&Logger::SetLevel>("setLevel"),
-    InstanceMethod<&Logger::Flush>("flush"),
-    InstanceMethod<&Logger::Drop>("drop"),
-    InstanceMethod<&Logger::SetPattern>("setPattern"),
-    InstanceMethod<&Logger::ClearFormatters>("clearFormatters"),
-    InstanceMethod<&Logger::Log<spdlog::level::level_enum::critical>>("critical"),
-    InstanceMethod<&Logger::Log<spdlog::level::level_enum::err>>("error"),
-    InstanceMethod<&Logger::Log<spdlog::level::level_enum::warn>>("warn"),
-    InstanceMethod<&Logger::Log<spdlog::level::level_enum::info>>("info"),
-    InstanceMethod<&Logger::Log<spdlog::level::level_enum::debug>>("debug"),
-    InstanceMethod<&Logger::Log<spdlog::level::level_enum::trace>>("trace"),
+    InstanceMethod("getLevel", &Logger::GetLevel),
+    InstanceMethod("setLevel", &Logger::SetLevel),
+    InstanceMethod("flush", &Logger::Flush),
+    InstanceMethod("drop", &Logger::Drop),
+    InstanceMethod("setPattern", &Logger::SetPattern),
+    InstanceMethod("clearFormatters", &Logger::ClearFormatters),
+    InstanceMethod("critical", &Logger::Log<spdlog::level::level_enum::critical>),
+    InstanceMethod("error", &Logger::Log<spdlog::level::level_enum::err>),
+    InstanceMethod("warn", &Logger::Log<spdlog::level::level_enum::warn>),
+    InstanceMethod("info", &Logger::Log<spdlog::level::level_enum::info>),
+    InstanceMethod("debug", &Logger::Log<spdlog::level::level_enum::debug>),
+    InstanceMethod("trace", &Logger::Log<spdlog::level::level_enum::trace>),
   });
   *constructor = Napi::Persistent(definition);
   exports.Set("Logger", definition);
