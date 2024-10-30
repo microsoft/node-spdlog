@@ -12,6 +12,7 @@
 			"<!(node -p \"require('node-addon-api').include_dir\")",
 			"deps/spdlog/include"
 		],
+		"defines": [ "NODE_API_SWALLOW_UNTHROWABLE_EXCEPTIONS" ],
 		'msvs_configuration_attributes': {
 			'SpectreMitigation': 'Spectre'
 		},
@@ -32,11 +33,6 @@
 			}
 		},
 		'conditions': [
-			['OS=="mac"', {
-				'xcode_settings': {
-					'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
-				}
-			}],
 			['OS=="win"', {
 				'defines': [
 					'SPDLOG_WCHAR_FILENAMES'
