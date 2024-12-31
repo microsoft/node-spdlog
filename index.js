@@ -6,6 +6,7 @@ exports.version = spdlog.version;
 exports.setLevel = spdlog.setLevel;
 exports.setFlushOn = spdlog.setFlushOn;
 exports.Logger = spdlog.Logger;
+exports.PatternTimeType = spdlog.PatternTimeType;
 
 function createRotatingLogger(name, filepath, maxFileSize, maxFiles) {
 	return createLogger('rotating', name, filepath, maxFileSize, maxFiles);
