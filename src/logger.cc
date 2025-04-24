@@ -180,9 +180,15 @@ void Logger::SetPattern(const Napi::CallbackInfo& info) {
     throw Napi::Error::New(env, "Provide pattern");
   }
 
+  auto time_type = spdlog::pattern_time_type::local;
+  if (info[1].IsNumber()) {
+    time_type = static_cast<spdlog::pattern_time_type>(
+        info[1].As<Napi::Number>().DoubleValue());
+  }
+
   const std::string pattern = info[0].As<Napi::String>();
   if (logger_) {
-    logger_->set_pattern(pattern);
+    logger_->set_pattern(pattern, time_type);
   }
 }
 

@@ -283,6 +283,30 @@ suite('API', function () {
 		assert.strictEqual(actual, 'This message should be written as is');
 	});
 
+	test('set pattern with time type local', async function () {
+		testObject = await aTestObject(logFile);
+		testObject.setPattern('[%z]', spdlog.PatternTimeType.Local);
+
+		let currentTimeZone = new Date().getTimezoneOffset();
+		currentTimeZone = (currentTimeZone/60) * -1;
+		testObject.info('This message should be written as is');
+
+		const str = `[${currentTimeZone < 0 ? '' : '+'}${currentTimeZone.toString().padStart(2, '0')}:00]`;
+		const actual = await getLastLine();
+		assert.strictEqual(actual, str);
+	});
+
+	test('set pattern with time type UTC', async function () {
+		testObject = await aTestObject(logFile);
+
+		testObject.setPattern('[%z]', spdlog.PatternTimeType.UTC);
+
+		testObject.info('This message should be written as is');
+
+		const actual = await getLastLine();
+		assert.strictEqual(actual, '[+00:00]');
+	});
+
 	test('clear formatters', async function () {
 		testObject = await aTestObject(logFile);
 
