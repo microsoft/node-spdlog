@@ -14,6 +14,7 @@ suite('API', function () {
 
 	var tempDirectory;
 	var logFile;
+	var invalidLogFile;
 	var EOL = '\n';
 	var testObject;
 
@@ -22,6 +23,7 @@ suite('API', function () {
 	suiteSetup(() => {
 		tempDirectory = path.join(__dirname, 'logs');
 		logFile = path.join(tempDirectory, 'test.log');
+		invalidLogFile = path.join(tempDirectory, 'test*.log');
 		filesToDelete.push(logFile);
 		if (fs.existsSync(logFile)) {
 			fs.unlinkSync(logFile);
@@ -64,6 +66,17 @@ suite('API', function () {
 	test('Create rotating logger', async function () {
 		testObject = await aTestObject(logFile);
 		assert.ok(fs.existsSync(logFile));
+	});
+
+	test('throws error when failed to create logfile', async function () {
+		let failedToThrow = false;
+		try {
+			await aTestObject(invalidLogFile);
+			failedToThrow = true;
+		} catch (err) {
+			assert.ok(err instanceof Error);
+		}
+		assert.strictEqual(failedToThrow, false);
 	});
 
 	test('Log setFlushOn', async function () {
