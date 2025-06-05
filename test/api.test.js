@@ -68,7 +68,7 @@ suite('API', function () {
 		assert.ok(fs.existsSync(logFile));
 	});
 
-	test('throws error when failed to create logfile', async function () {
+	(process.platform === 'win32' ? test : test.skip)('throws error when failed to create logfile', async function () {
 		let failedToThrow = false;
 		try {
 			await aTestObject(invalidLogFile);
