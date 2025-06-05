@@ -76,18 +76,26 @@ Logger::Logger(const Napi::CallbackInfo& info)
 #else
       const std::string fileName = info[2].As<Napi::String>();
 #endif
-      if (logName == "rotating_async") {
-        logger_ = spdlog::rotating_logger_st<spdlog::async_factory>(
-            logName, fileName, static_cast<size_t>(info[3].As<Napi::Number>().Int64Value()),
-            static_cast<size_t>(info[4].As<Napi::Number>().Int64Value()));
-      } else {
-        logger_ = spdlog::rotating_logger_st(
-            logName, fileName, static_cast<size_t>(info[3].As<Napi::Number>().Int64Value()),
-            static_cast<size_t>(info[4].As<Napi::Number>().Int64Value()));
+      try {
+        if (logName == "rotating_async") {
+          logger_ = spdlog::rotating_logger_st<spdlog::async_factory>(
+              logName, fileName, static_cast<size_t>(info[3].As<Napi::Number>().Int64Value()),
+              static_cast<size_t>(info[4].As<Napi::Number>().Int64Value()));
+        } else {
+          logger_ = spdlog::rotating_logger_st(
+              logName, fileName, static_cast<size_t>(info[3].As<Napi::Number>().Int64Value()),
+              static_cast<size_t>(info[4].As<Napi::Number>().Int64Value()));
+        }
+      } catch (const spdlog::spdlog_ex& ex) {
+        throw Napi::Error::New(env, ex.what());
       }
     }
   } else {
-    logger_ = spdlog::stdout_logger_st<spdlog::async_factory>(name);
+    try {
+      logger_ = spdlog::stdout_logger_st<spdlog::async_factory>(name);
+    } catch (const spdlog::spdlog_ex& ex) {
+      throw Napi::Error::New(env, ex.what());
+    }
   }
 }
 
