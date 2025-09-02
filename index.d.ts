@@ -20,6 +20,11 @@ export enum LogLevel {
     Off
 }
 
+export enum PatternTimeType {
+    Local,
+    UTC,
+}
+
 export class Logger {
     constructor(loggerType: "rotating" | "rotating_async" | "stdout_async", name: string, filename: string, filesize: number, filecount: number);
 
