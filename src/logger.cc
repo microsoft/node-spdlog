@@ -118,25 +118,18 @@ void Logger::Log(const Napi::CallbackInfo& info) {
 
   if (logger_) {
     std::string message = info[0].As<Napi::String>();
-    switch(level) {
-      case spdlog::level::level_enum::critical:
-        logger_->critical(message);
-        break;
-      case spdlog::level::level_enum::err:
-        logger_->error(message);
-        break;
-      case spdlog::level::level_enum::warn:
-        logger_->warn(message);
-        break;
-      case spdlog::level::level_enum::info:
-        logger_->info(message);
-        break;
-      case spdlog::level::level_enum::debug:
-        logger_->debug(message);
-        break;
-      case spdlog::level::level_enum::trace:
-        logger_->trace(message);
-        break;
+    if constexpr (level == spdlog::level::level_enum::critical) {
+      logger_->critical(message);
+    } else if constexpr (level == spdlog::level::level_enum::err) {
+      logger_->error(message);
+    } else if constexpr (level == spdlog::level::level_enum::warn) {
+      logger_->warn(message);
+    } else if constexpr (level == spdlog::level::level_enum::info) {
+      logger_->info(message);
+    } else if constexpr (level == spdlog::level::level_enum::debug) {
+      logger_->debug(message);
+    } else if constexpr (level == spdlog::level::level_enum::trace) {
+      logger_->trace(message);
     }
   }
 }
