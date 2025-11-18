@@ -38,6 +38,11 @@
 				'defines': [
 					'SPDLOG_WCHAR_FILENAMES'
 				]
+			}, {
+                'cflags': [
+                    '-O2',
+                    '-D_FORTIFY_SOURCE=2'
+                ]
 			}]
 		]
 	}]
