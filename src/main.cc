@@ -44,6 +44,11 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
   exports.Set("setLevel", Napi::Function::New(env, SetLevel));
   exports.Set("setFlushOn", Napi::Function::New(env, SetFlushOn));
 
+  Napi::Object obj = Napi::Object::New(env);
+  obj.Set("Local", Napi::Number::New(env, static_cast<double>(spdlog::pattern_time_type::local)));
+  obj.Set("UTC", Napi::Number::New(env, static_cast<double>(spdlog::pattern_time_type::utc)));
+  exports.Set("PatternTimeType", obj);
+
   Logger::Init(env, exports);
   return exports;
 }
