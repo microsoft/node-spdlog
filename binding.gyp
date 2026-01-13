@@ -43,8 +43,7 @@
 				]
 			}, {
                 'cflags': [
-                    '-O2',
-                    '-D_FORTIFY_SOURCE=2'
+                    '-O2'
                 ]
 			}]
 		]
