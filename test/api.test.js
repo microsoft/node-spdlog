@@ -12,12 +12,17 @@ const spdlog = require('..');
 
 suite('API', function () {
 
+	/** @type {string} */
 	var tempDirectory;
+	/** @type {string} */
 	var logFile;
+	/** @type {string} */
 	var invalidLogFile;
 	var EOL = '\n';
+	/** @type {spdlog.Logger | undefined} */
 	var testObject;
 
+	/** @type {string[]} */
 	var filesToDelete = [];
 
 	suiteSetup(() => {
@@ -156,6 +161,7 @@ suite('API', function () {
 		test(`Log ${name} includes U+0000`, async function () {
 			testObject = await aTestObject(logFile);
 			testObject.setLevel(0);
+			// @ts-ignore accessing defined method names dynamically
 			testObject[name]('a\u0000b');
 	
 			const actual = await getLastLine();
@@ -330,6 +336,10 @@ suite('API', function () {
 		return lines[lines.length - 2];
 	}
 
+	/**
+	 * @param {string} logfile
+	 * @returns {Promise<spdlog.Logger>}
+	 */
 	async function aTestObject(logfile) {
 		const logger = await spdlog.createAsyncRotatingLogger('test', logfile, 1048576 * 5, 2);
 		logger.setPattern('%+');
@@ -337,6 +347,9 @@ suite('API', function () {
 	}
 
 	async function getAllLines() {
+		if (!testObject) {
+			throw new Error('testObject is not initialized');
+		}
 		testObject.drop();
 		const content = fs.readFileSync(logFile).toString();
 		testObject = await aTestObject(logFile);
