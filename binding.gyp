@@ -43,7 +43,8 @@
 				]
 			}, {
                 'cflags': [
-                    '-O2'
+                    '-O2',
+					'-fstack-protector-strong'
                 ]
 			}]
 		]
