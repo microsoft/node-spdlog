@@ -29,7 +29,7 @@ extends:
         buildSteps:
           - script: |
               git submodule update --init
-              npm ci
+              npm ci --verbose
             displayName: Install dependencies
 
         testPlatforms:
