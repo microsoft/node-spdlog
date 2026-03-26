@@ -12,7 +12,10 @@
 			"<!(node -p \"require('node-addon-api').include_dir\")",
 			"deps/spdlog/include"
 		],
-		"defines": [ "NODE_API_SWALLOW_UNTHROWABLE_EXCEPTIONS" ],
+		"defines": [
+			"NODE_API_SWALLOW_UNTHROWABLE_EXCEPTIONS",
+			"FMT_CONSTEVAL="
+		],
 		'msvs_configuration_attributes': {
 			'SpectreMitigation': 'Spectre'
 		},
