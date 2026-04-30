@@ -14,7 +14,13 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        include:
+          - os: windows-latest
+            npm_arch: x64
+          - os: macos-latest
+            npm_arch: arm64
+          - os: ubuntu-latest
+            npm_arch: x64
 
     runs-on: ${{ matrix.os }}
 
@@ -31,7 +37,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
         env:
-          npm_config_arch: x64
+          npm_config_arch: ${{ matrix.npm_arch }}
 
       - name: Run Tests
         run: npm test
