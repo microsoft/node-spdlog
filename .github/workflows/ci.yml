@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: windows-latest
+          - os: windows-2022
             npm_arch: x64
           - os: macos-latest
             npm_arch: arm64
